@@ -10,7 +10,13 @@ interface Attribute {
     value: string;
 }
 
-export function sortArticles(isDescending: boolean) {
+export enum SortingOrder {
+    Descending = 1,
+    Ascending = 2,
+    Standard = 3,
+}
+
+export function sortArticles(sortingOrder: SortingOrder) {
     const containers = document.getElementsByClassName("basicContainer");
 
     for (let collection of containers) {
@@ -20,7 +26,7 @@ export function sortArticles(isDescending: boolean) {
 
         collection.innerHTML = "";
 
-        const sortedArticles = sort(articleSummaries, isDescending);
+        const sortedArticles = sort(articleSummaries, sortingOrder);
 
         for (let article of sortedArticles) {
             let articleElement = createArticleElement(article);
@@ -75,18 +81,25 @@ function getAttributes(article: Element) {
 
 function sort(
     articles: ArticleSummary[],
-    descending: boolean
+    sortingOrder: SortingOrder
 ): ArticleSummary[] {
     const newArticles = JSON.parse(JSON.stringify(articles));
 
-    if (descending) {
+    if (sortingOrder === SortingOrder.Descending) {
         return newArticles.sort(
             (a: ArticleSummary, b: ArticleSummary) =>
                 b.temperature - a.temperature
         );
     }
 
+    if (sortingOrder === SortingOrder.Ascending) {
+        return newArticles.sort(
+            (a: ArticleSummary, b: ArticleSummary) =>
+                a.temperature - b.temperature
+        );
+    }
+
     return newArticles.sort(
-        (a: ArticleSummary, b: ArticleSummary) => a.temperature - b.temperature
+        (a: ArticleSummary, b: ArticleSummary) => a.index - b.index
     );
 }

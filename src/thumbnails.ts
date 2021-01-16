@@ -1,4 +1,4 @@
-import { sortArticles } from "./sort";
+import { sortArticles, SortingOrder } from "./sort";
 import { createButton, insertAfter } from "./helpers";
 
 // add buttons to webpage
@@ -19,7 +19,11 @@ function addButtonsToWebpage() {
         "febercold",
     ]);
 
+    // sort standard button
+    const sortStandard = createButton("sortStandardButton", "Standard", []);
+
     pluginSettingsBar.appendChild(sortHot);
+    pluginSettingsBar.appendChild(sortStandard);
     pluginSettingsBar.appendChild(sortCold);
 }
 
@@ -32,17 +36,28 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 const hotButton = document.querySelector("#sortHotButton");
 const coldButton = document.querySelector("#sortColdButton");
+const standardButton = document.querySelector("#sortStandardButton");
 
 // when hot button clicked
 hotButton.addEventListener("click", () => {
-    sortArticles(true);
+    sortArticles(SortingOrder.Descending);
     hotButton.classList.add("button-selected");
+    standardButton.classList.remove("button-selected");
     coldButton.classList.remove("button-selected");
 });
 
 // when cold button clicked
 coldButton.addEventListener("click", () => {
-    sortArticles(false);
+    sortArticles(SortingOrder.Ascending);
     hotButton.classList.remove("button-selected");
+    standardButton.classList.remove("button-selected");
     coldButton.classList.add("button-selected");
+});
+
+// when standard button clicked
+standardButton.addEventListener("click", () => {
+    sortArticles(SortingOrder.Standard);
+    hotButton.classList.remove("button-selected");
+    coldButton.classList.remove("button-selected");
+    standardButton.classList.add("button-selected");
 });
