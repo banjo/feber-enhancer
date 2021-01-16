@@ -1,0 +1,33 @@
+.settings-bar {
+    background-color: #222;
+    color: #999;
+    margin: 0px auto 10px auto;
+    padding: 15px 20px;
+    max-width: 940px;
+    font-family: SuisseLight, HelveticaNeue, "Roboto Thin", Arial, serif;
+    font-size: 14px;
+    line-height: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: auto;
+    display: flex;
+    align-items: center;
+}
+
+.settings-button {
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 3px 7px;
+    margin: 0 1px 0 5px;
+    font-size: 13px;
+    color: #999;
+    font-family: SuisseRegular;
+    -webkit-font-smoothing: auto;
+    cursor: pointer;
+}
+
+.button-selected {
+    color: #eee;
+    border: 2px solid #f7520c;
+    color: #eee;
+    margin: 0 0 0 4px;
+}

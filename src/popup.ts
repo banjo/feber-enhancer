@@ -1,5 +1,4 @@
 import * as moment from "moment";
-import * as $ from "jquery";
 
 let count = 0;
 
@@ -10,16 +9,21 @@ $(function () {
     };
 
     chrome.tabs.query(queryInfo, function (tabs) {
-        $("#url").text(tabs[0].url);
-        $("#time").text(moment().format("YYYY-MM-DD HH:mm:ss"));
+        document.querySelector("#url").innerHTML = tabs[0].url;
+        document.querySelector("#time").innerHTML = moment().format(
+            "YYYY-MM-DD HH:mm:ss"
+        );
     });
 
     chrome.browserAction.setBadgeText({ text: count.toString() });
-    $("#countUp").click(() => {
-        chrome.browserAction.setBadgeText({ text: (++count).toString() });
+
+    document.querySelector("#countUp").addEventListener("click", () => {
+        chrome.browserAction.setBadgeText({
+            text: (++count).toString(),
+        });
     });
 
-    $("#sort").click(() => {
+    document.querySelector("#sort").addEventListener("click", () => {
         chrome.tabs.query(
             { active: true, currentWindow: true },
             function (tabs) {
