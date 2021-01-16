@@ -1,4 +1,5 @@
 import { sortArticles } from "./sort";
+import { createButton, insertAfter } from "./helpers";
 
 // add buttons to webpage
 function addButtonsToWebpage() {
@@ -20,29 +21,6 @@ function addButtonsToWebpage() {
 
     pluginSettingsBar.appendChild(sortHot);
     pluginSettingsBar.appendChild(sortCold);
-}
-
-function createButton(
-    id: string,
-    text: string,
-    classes: string[]
-): HTMLDivElement {
-    const button = document.createElement("div");
-    button.classList.add("settings-button");
-    const span = document.createElement("span");
-    button.id = id;
-    span.textContent = text;
-
-    for (let c of classes) {
-        button.classList.add(c);
-    }
-
-    button.appendChild(span);
-    return button;
-}
-
-function insertAfter(newNode: Element, referenceNode: Element) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
 addButtonsToWebpage();
