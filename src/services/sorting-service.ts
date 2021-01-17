@@ -7,7 +7,7 @@ import {
 } from "./storage-service";
 import { createArticleElement } from "./thumbnails-service";
 
-export async function sortArticles(sortingOrder: SortingOrder) {
+export async function sortThumbnails(sortingOrder: SortingOrder) {
     const currentSettings = await getThumbnailSettingsStateFromStorage();
     currentSettings.sorting = sortingOrder;
 
@@ -29,28 +29,6 @@ export async function sortArticles(sortingOrder: SortingOrder) {
 
             collection.appendChild(articleElement);
         }
-    }
-}
-
-async function sortByArticleState() {
-    const state = await getArticleStateFromStorage();
-
-    const containers = document.getElementsByClassName("basicContainer");
-
-    let i = 0;
-    for (let collection of containers) {
-        const articlesForThatDay = state.articles[i];
-        const sortedArticles = sort(articlesForThatDay, SortingOrder.Standard);
-
-        collection.innerHTML = "";
-
-        for (let article of sortedArticles) {
-            let articleElement = createArticleElement(article);
-
-            collection.appendChild(articleElement);
-        }
-
-        i++;
     }
 }
 

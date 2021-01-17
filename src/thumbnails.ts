@@ -1,4 +1,4 @@
-import { sortArticles } from "./services/sorting-service";
+import { sortThumbnails } from "./services/sorting-service";
 import {
     createButton,
     insertAfter,
@@ -32,7 +32,7 @@ import {
 
 // when button is clicked in plugin menu
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    sortArticles(msg.sortDescending);
+    sortThumbnails(msg.sortDescending);
 });
 
 function hideOriginalSettingsBar() {
@@ -56,7 +56,7 @@ async function initSettings() {
     shouldShowVoting(settings.showVotes);
 
     if (settings.sorting !== SortingOrder.Standard) {
-        sortArticles(settings.sorting);
+        sortThumbnails(settings.sorting);
         selectCorrectButton(settings.sorting);
     }
 }
@@ -79,30 +79,23 @@ async function addEventListenersForButtons() {
     const showVoteButton = document.querySelector("#showVoteButton");
 
     hotButton.addEventListener("click", async () => {
-        await sortArticles(SortingOrder.Descending);
+        await sortThumbnails(SortingOrder.Descending);
         selectCorrectButton(SortingOrder.Descending);
     });
 
     coldButton.addEventListener("click", async () => {
-        await sortArticles(SortingOrder.Ascending);
+        await sortThumbnails(SortingOrder.Ascending);
         selectCorrectButton(SortingOrder.Ascending);
     });
 
     standardButton.addEventListener("click", async () => {
-        await sortArticles(SortingOrder.Standard);
+        await sortThumbnails(SortingOrder.Standard);
         selectCorrectButton(SortingOrder.Standard);
     });
 
     showVoteButton.addEventListener("click", async (e) => {
         const target = e.target as Element;
         await shouldShowVoting(!isButtonSelected(target));
-    });
-
-    // if standard feber hot or cold buttons are clicked, set sorting to standard before saving the state, and then set back to chosen sorting to avoid bug.
-    document.querySelectorAll("f-bar-options-item").forEach(async (element) => {
-        element.addEventListener("click", async () => {
-            // TODO: fix changing sort
-        });
     });
 }
 
