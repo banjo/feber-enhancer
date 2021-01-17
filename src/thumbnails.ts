@@ -1,8 +1,10 @@
 import { sortThumbnails } from "./services/sorting-service";
 import {
     createButton,
+    getSpinnerElement,
     insertAfter,
     isButtonSelected,
+    showSpinnerInsteadOf,
 } from "./services/helpers";
 import {
     getThumbnailSettingsStateFromStorage,
@@ -15,7 +17,6 @@ import {
     getContainerizedArticles,
     selectCorrectButton,
     shouldShowVoting,
-    showSettingsBar,
 } from "./services/thumbnails-service";
 
 (async () => {
@@ -38,6 +39,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 function hideOriginalSettingsBar() {
     const bar = document.querySelector("f-bar-options");
+
     bar.setAttribute("style", "display: none;");
 }
 
@@ -61,7 +63,7 @@ async function initSettings() {
         selectCorrectButton(settings.sorting);
     }
 
-    showSettingsBar(true);
+    showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
 }
 
 async function manageArticleState() {
@@ -103,15 +105,22 @@ async function addEventListenersForButtons() {
 }
 
 function addButtonsToWebpage() {
-    const bar = document.getElementsByTagName("f-bar-options")[0];
+    const bar = document.querySelector("f-bar-options");
 
     // add settings bar
     const pluginSettingsBar = document.createElement("div");
-    pluginSettingsBar.textContent = "Feber Enhancer";
     pluginSettingsBar.classList.add("settings-bar");
     pluginSettingsBar.id = "settings-bar";
+    pluginSettingsBar.textContent = "Feber Enhancer";
+
+    const pluginSettingsBarContainer = document.createElement("div");
+    pluginSettingsBarContainer.id = "settings-bar-container";
+    pluginSettingsBarContainer.classList.add("settings-bar-container");
+    pluginSettingsBar.appendChild(pluginSettingsBarContainer);
+
+    const spinner = getSpinnerElement("thumbnail-spinner");
+    pluginSettingsBar.appendChild(spinner);
     insertAfter(pluginSettingsBar, bar);
-    showSettingsBar(false);
 
     // Sort hot button
     const sortHot = createButton("sortHotButton", "Heta först", [
@@ -140,9 +149,11 @@ function addButtonsToWebpage() {
         "menu-item",
     ]);
 
-    pluginSettingsBar.appendChild(sortHot);
-    pluginSettingsBar.appendChild(sortStandard);
-    pluginSettingsBar.appendChild(sortCold);
-    pluginSettingsBar.appendChild(separator);
-    pluginSettingsBar.appendChild(showVoteButton);
+    pluginSettingsBarContainer.appendChild(sortHot);
+    pluginSettingsBarContainer.appendChild(sortStandard);
+    pluginSettingsBarContainer.appendChild(sortCold);
+    pluginSettingsBarContainer.appendChild(separator);
+    pluginSettingsBarContainer.appendChild(showVoteButton);
+
+    showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", true);
 }

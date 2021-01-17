@@ -30,3 +30,28 @@ export function selectButton(button: Element) {
 export function deselectButton(button: Element) {
     button.classList.remove("button-selected");
 }
+
+export function getSpinnerElement(id: string) {
+    const spinner = document.createElement("div");
+    spinner.id = id;
+    spinner.innerHTML = `<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>`;
+    return spinner;
+}
+
+export function showSpinnerInsteadOf(
+    elementId: string,
+    spinnerId: string,
+    showSpinner: boolean
+) {
+    const spinner = document.querySelector(`#${spinnerId}`);
+    const element = document.querySelector(`#${elementId}`);
+
+    if (showSpinner) {
+        element.setAttribute("style", "display: none;");
+        spinner.removeAttribute("style");
+        return;
+    }
+
+    element.removeAttribute("style");
+    spinner.setAttribute("style", "display: none;");
+}

@@ -9,6 +9,10 @@
     line-height: 16px;
     font-style: normal;
     -webkit-font-smoothing: auto;
+    text-align: center;
+}
+
+.settings-bar-container {
     display: flex;
     align-items: center;
 }
