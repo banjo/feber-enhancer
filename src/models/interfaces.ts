@@ -14,6 +14,12 @@ export interface ArticleSummary {
     time: number;
     scrapedHtml: string;
     collectionNumber: number;
+    articleId: number;
+    author: string;
+    mainTitle: string;
+    subTitle: string;
+    comments: number;
+    bodyText: string[];
 }
 
 export interface Attribute {

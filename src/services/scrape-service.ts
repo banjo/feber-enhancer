@@ -24,12 +24,57 @@ export async function getScrapedHtml(response: Promise<Response>) {
     return await data.text();
 }
 
-export function getTime(htmlString: string) {
+export function createElementFromString(htmlString: string) {
     const parser = new DOMParser();
     const DOM = parser.parseFromString(htmlString, "text/html");
+    return DOM;
+}
+
+export function getTime(htmlString: string) {
+    const DOM = createElementFromString(htmlString);
     const time = DOM.querySelector("article").getAttribute("time");
 
     return Number(time);
+}
+
+export function getBodyText(htmlString: string) {
+    const DOM = createElementFromString(htmlString);
+    const bodyText = DOM.querySelector(".text");
+
+    const mergedText = Array.from(bodyText.children, ({ textContent }) =>
+        textContent.trim()
+    );
+
+    return mergedText;
+}
+
+export function getAuthor(htmlString: string) {
+    const DOM = createElementFromString(htmlString);
+    const author = DOM.querySelector("footer")
+        .querySelector("img")
+        .getAttribute("alt");
+
+    return author;
+}
+
+export function getMainTitle(article: Element) {
+    const title = article.querySelector("h1").querySelector("b").innerText;
+
+    return title;
+}
+
+export function getSubTitle(article: Element) {
+    const subTitle = article.querySelector("h1").querySelectorAll("a")[1]
+        .textContent;
+
+    return subTitle;
+}
+
+export function getComments(article: Element) {
+    const commentCount = article.querySelector(".disqus-comment-count")
+        .textContent;
+
+    return Number(commentCount);
 }
 
 export function getUrl(article: Element) {
@@ -50,4 +95,11 @@ export function getAttributes(article: Element) {
         });
     }
     return attributes;
+}
+
+export function getArticleId(article: Element) {
+    const idWithText = article.getAttribute("id");
+    const id = idWithText.replace("ArticleBasic_", "");
+
+    return Number(id);
 }

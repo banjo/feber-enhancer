@@ -2,8 +2,14 @@ import { SortingOrder } from "../models/enums";
 import { ArticleSummary } from "../models/interfaces";
 import { deselectButton, selectButton } from "./helpers";
 import {
+    getArticleId,
     getAttributes,
+    getAuthor,
+    getBodyText,
+    getComments,
+    getMainTitle,
     getScrapedHtml,
+    getSubTitle,
     getTemp,
     getTime,
     getUrl,
@@ -76,6 +82,12 @@ async function getArticleSummaries(
                 url: getUrl(article),
                 scrapedHtml: scrapedHtml,
                 collectionNumber: collectionNumber,
+                articleId: getArticleId(article),
+                author: getAuthor(scrapedHtml),
+                mainTitle: getMainTitle(article),
+                subTitle: getSubTitle(article),
+                comments: getComments(article),
+                bodyText: getBodyText(scrapedHtml),
             };
 
             articlesSummaries.push(articleSummary);
