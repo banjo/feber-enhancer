@@ -1,6 +1,14 @@
 import { SortingOrder } from "../models/enums";
-import { ArticleSummary, Attribute } from "../models/interfaces";
+import { ArticleSummary } from "../models/interfaces";
 import { deselectButton, selectButton } from "./helpers";
+import {
+    getAttributes,
+    getScrapedHtml,
+    getTemp,
+    getTime,
+    getUrl,
+    scrapeArticlesFromThumbnails,
+} from "./scrape-service";
 import {
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
@@ -8,7 +16,7 @@ import {
 
 export async function getContainerizedArticles() {
     const containers = document.getElementsByClassName("basicContainer");
-    let scrapedArticles = await scrapeArticles(containers);
+    let scrapedArticles = await scrapeArticlesFromThumbnails(containers);
 
     const containerArticleSummaries = await getArticleSummaries(
         containers,
@@ -16,23 +24,6 @@ export async function getContainerizedArticles() {
     );
 
     return containerArticleSummaries;
-}
-
-async function scrapeArticles(containers: HTMLCollectionOf<Element>) {
-    const allUrls = [];
-
-    for (let collection of containers) {
-        const articles = collection.getElementsByTagName("f-basic");
-        for (let article of articles) {
-            allUrls.push(getUrl(article));
-        }
-    }
-
-    const promises = allUrls.map((url) => fetch(url));
-
-    await Promise.all(promises);
-
-    return promises;
 }
 
 export function selectCorrectButton(sortingOrder: SortingOrder) {
@@ -100,39 +91,6 @@ async function getArticleSummaries(
     return containerArticleSummaries;
 }
 
-async function getScrapedHtml(response: Promise<Response>) {
-    const data = await response;
-    return await data.text();
-}
-
-function getTime(htmlString: string) {
-    const parser = new DOMParser();
-    const DOM = parser.parseFromString(htmlString, "text/html");
-    const time = DOM.querySelector("article").getAttribute("time");
-
-    return Number(time);
-}
-
-function getUrl(article: Element) {
-    const url = article.querySelector("a").href;
-    return url;
-}
-
-function getTemp(article: Element) {
-    return Number(article.getAttribute("data-temp"));
-}
-
-export function getAttributes(article: Element) {
-    let attributes = [] as Attribute[];
-    for (let attribute of article.attributes) {
-        attributes.push({
-            name: attribute.name,
-            value: attribute.value,
-        });
-    }
-    return attributes;
-}
-
 export function createArticleElement(article: ArticleSummary) {
     let articleElement = document.createElement("f-basic");
     articleElement.innerHTML = article.html;
@@ -173,4 +131,15 @@ function shouldShowVoteButtonPressed(showVote: boolean) {
     }
 
     deselectButton(button);
+}
+
+export function showSettingsBar(shouldShow: boolean) {
+    const pluginSettingsBar = document.querySelector("#settings-bar");
+
+    if (shouldShow) {
+        pluginSettingsBar.removeAttribute("style");
+        return;
+    }
+
+    pluginSettingsBar.setAttribute("style", "display: none;");
 }

@@ -15,6 +15,7 @@ import {
     getContainerizedArticles,
     selectCorrectButton,
     shouldShowVoting,
+    showSettingsBar,
 } from "./services/thumbnails-service";
 
 (async () => {
@@ -53,12 +54,14 @@ async function initSettings() {
         return;
     }
 
-    shouldShowVoting(settings.showVotes);
+    await shouldShowVoting(settings.showVotes);
 
     if (settings.sorting !== SortingOrder.Standard) {
-        sortThumbnails(settings.sorting);
+        await sortThumbnails(settings.sorting);
         selectCorrectButton(settings.sorting);
     }
+
+    showSettingsBar(true);
 }
 
 async function manageArticleState() {
@@ -106,7 +109,9 @@ function addButtonsToWebpage() {
     const pluginSettingsBar = document.createElement("div");
     pluginSettingsBar.textContent = "Feber Enhancer";
     pluginSettingsBar.classList.add("settings-bar");
+    pluginSettingsBar.id = "settings-bar";
     insertAfter(pluginSettingsBar, bar);
+    showSettingsBar(false);
 
     // Sort hot button
     const sortHot = createButton("sortHotButton", "Heta först", [
