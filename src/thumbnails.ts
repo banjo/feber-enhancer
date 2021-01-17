@@ -20,6 +20,7 @@ import {
 (async () => {
     try {
         addButtonsToWebpage();
+        hideOriginalSettingsBar();
         await manageArticleState();
         await initSettings();
         await addEventListenersForButtons();
@@ -33,6 +34,11 @@ import {
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     sortArticles(msg.sortDescending);
 });
+
+function hideOriginalSettingsBar() {
+    const bar = document.querySelector("f-bar-options");
+    bar.setAttribute("style", "display: none;");
+}
 
 async function initSettings() {
     const initialSettings: ThumbnailSettingsState = {
