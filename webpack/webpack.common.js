@@ -6,7 +6,7 @@ var glob = require("glob");
 
 function getEntries() {
     const entries = glob
-        .sync(path.join(__dirname, srcDir + "*.ts"))
+        .sync(path.join(__dirname, srcDir + "**/*.ts"))
         .reduce(function (obj, el) {
             obj[path.parse(el).name] = el;
             return obj;

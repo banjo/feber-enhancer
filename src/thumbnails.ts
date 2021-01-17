@@ -1,11 +1,15 @@
+import { sortArticles } from "./services/sorting-service";
+import { createButton, insertAfter } from "./services/helpers";
 import {
-    ArticleSummary,
-    getArticleSummaries,
-    sortArticles,
-    SortingOrder,
-} from "./sort";
-import { ArticleState, createButton, insertAfter } from "./helpers";
-import { getSortingFromStorage, setThumbnailStateToStorage } from "./storage";
+    getSortingFromStorage,
+    setThumbnailStateToStorage,
+} from "./services/storage-service";
+import { ArticleState } from "./models/interfaces";
+import { SortingOrder } from "./models/enums";
+import {
+    getContainerizedArticles,
+    selectCorrectButton,
+} from "./services/thumbnails-service";
 
 (async () => {
     try {
@@ -41,18 +45,6 @@ async function manageArticleState() {
     }
 }
 
-function getContainerizedArticles() {
-    const containers = document.getElementsByClassName("basicContainer");
-
-    const containerArticleSummaries = [] as ArticleSummary[][];
-
-    for (let collection of containers) {
-        const articleSummaries = getArticleSummaries(collection);
-        containerArticleSummaries.push(articleSummaries);
-    }
-    return containerArticleSummaries;
-}
-
 async function addEventListenersForButtons() {
     const hotButton = document.querySelector("#sortHotButton");
     const coldButton = document.querySelector("#sortColdButton");
@@ -75,30 +67,6 @@ async function addEventListenersForButtons() {
         await sortArticles(SortingOrder.Standard);
         selectCorrectButton(SortingOrder.Standard);
     });
-}
-
-function selectCorrectButton(sortingOrder: SortingOrder) {
-    const hotButton = document.querySelector("#sortHotButton");
-    const coldButton = document.querySelector("#sortColdButton");
-    const standardButton = document.querySelector("#sortStandardButton");
-
-    if (sortingOrder === SortingOrder.Standard) {
-        hotButton.classList.remove("button-selected");
-        coldButton.classList.remove("button-selected");
-        standardButton.classList.add("button-selected");
-    }
-
-    if (sortingOrder === SortingOrder.Ascending) {
-        hotButton.classList.remove("button-selected");
-        standardButton.classList.remove("button-selected");
-        coldButton.classList.add("button-selected");
-    }
-
-    if (sortingOrder === SortingOrder.Descending) {
-        hotButton.classList.add("button-selected");
-        standardButton.classList.remove("button-selected");
-        coldButton.classList.remove("button-selected");
-    }
 }
 
 function addButtonsToWebpage() {

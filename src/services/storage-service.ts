@@ -1,5 +1,5 @@
-import { ArticleState } from "./helpers";
-import { SortingOrder } from "./sort";
+import { SortingOrder } from "../models/enums";
+import { ArticleState } from "../models/interfaces";
 
 export function setSortingToStorage(sorting: SortingOrder) {
     chrome.storage.local.set({ sorting: sorting });

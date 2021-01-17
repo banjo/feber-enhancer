@@ -1,23 +1,13 @@
-import { ArticleState } from "./helpers";
-import { getThumbnailStateFromStorage, setSortingToStorage } from "./storage";
-
-export interface ArticleSummary {
-    html: string;
-    index: number;
-    temperature: number;
-    attributes: Attribute[];
-}
-
-interface Attribute {
-    name: string;
-    value: string;
-}
-
-export enum SortingOrder {
-    Descending = 1,
-    Ascending = 2,
-    Standard = 3,
-}
+import { SortingOrder } from "../models/enums";
+import { ArticleSummary } from "../models/interfaces";
+import {
+    getThumbnailStateFromStorage,
+    setSortingToStorage,
+} from "./storage-service";
+import {
+    createArticleElement,
+    getArticleSummaries,
+} from "./thumbnails-service";
 
 export async function sortArticles(sortingOrder: SortingOrder) {
     setSortingToStorage(sortingOrder);
@@ -64,51 +54,6 @@ async function sortByArticleState() {
 
         i++;
     }
-}
-
-export function getArticleSummaries(collection: Element) {
-    const articles = collection.getElementsByTagName("f-basic");
-
-    const articlesSummaries: ArticleSummary[] = [];
-
-    let indexOfArticle = 0;
-    for (let article of articles) {
-        let attributes = getAttributes(article);
-
-        let articleSummary: ArticleSummary = {
-            html: article.innerHTML,
-            index: indexOfArticle,
-            temperature: Number(article.getAttribute("data-temp")),
-            attributes: attributes,
-        };
-
-        articlesSummaries.push(articleSummary);
-
-        indexOfArticle++;
-    }
-
-    return articlesSummaries;
-}
-
-function createArticleElement(article: ArticleSummary) {
-    let articleElement = document.createElement("f-basic");
-    articleElement.innerHTML = article.html;
-
-    for (let attribute of article.attributes) {
-        articleElement.setAttribute(attribute.name, attribute.value);
-    }
-    return articleElement;
-}
-
-function getAttributes(article: Element) {
-    let attributes = [] as Attribute[];
-    for (let attribute of article.attributes) {
-        attributes.push({
-            name: attribute.name,
-            value: attribute.value,
-        });
-    }
-    return attributes;
 }
 
 function sort(
