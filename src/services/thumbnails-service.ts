@@ -6,16 +6,33 @@ import {
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
 
-export function getContainerizedArticles() {
+export async function getContainerizedArticles() {
     const containers = document.getElementsByClassName("basicContainer");
+    let scrapedArticles = await scrapeArticles(containers);
 
-    const containerArticleSummaries = [] as ArticleSummary[][];
+    const containerArticleSummaries = await getArticleSummaries(
+        containers,
+        scrapedArticles
+    );
+
+    return containerArticleSummaries;
+}
+
+async function scrapeArticles(containers: HTMLCollectionOf<Element>) {
+    const allUrls = [];
 
     for (let collection of containers) {
-        const articleSummaries = getArticleSummaries(collection);
-        containerArticleSummaries.push(articleSummaries);
+        const articles = collection.getElementsByTagName("f-basic");
+        for (let article of articles) {
+            allUrls.push(getUrl(article));
+        }
     }
-    return containerArticleSummaries;
+
+    const promises = allUrls.map((url) => fetch(url));
+
+    await Promise.all(promises);
+
+    return promises;
 }
 
 export function selectCorrectButton(sortingOrder: SortingOrder) {
@@ -42,28 +59,67 @@ export function selectCorrectButton(sortingOrder: SortingOrder) {
     }
 }
 
-export function getArticleSummaries(collection: Element) {
-    const articles = collection.getElementsByTagName("f-basic");
+async function getArticleSummaries(
+    containers: HTMLCollectionOf<Element>,
+    scraped: Promise<Response>[]
+) {
+    const containerArticleSummaries = [] as ArticleSummary[][];
 
-    const articlesSummaries: ArticleSummary[] = [];
+    let collectionNumber = 0;
+    let scrapeNumber = 0;
+    for (let collection of containers) {
+        const articles = collection.getElementsByTagName("f-basic");
 
-    let indexOfArticle = 0;
-    for (let article of articles) {
-        let attributes = getAttributes(article);
+        const articlesSummaries: ArticleSummary[] = [];
 
-        let articleSummary: ArticleSummary = {
-            html: article.innerHTML,
-            index: indexOfArticle,
-            temperature: Number(article.getAttribute("data-temp")),
-            attributes: attributes,
-        };
+        let indexOfArticle = 0;
+        for (let article of articles) {
+            const scrapedHtml = await getScrapedHtml(scraped[scrapeNumber]);
 
-        articlesSummaries.push(articleSummary);
+            let articleSummary: ArticleSummary = {
+                html: article.innerHTML,
+                index: indexOfArticle,
+                temperature: getTemp(article),
+                attributes: getAttributes(article),
+                time: getTime(scrapedHtml),
+                url: getUrl(article),
+                scrapedHtml: scrapedHtml,
+                collectionNumber: collectionNumber,
+            };
 
-        indexOfArticle++;
+            articlesSummaries.push(articleSummary);
+
+            scrapeNumber++;
+            indexOfArticle++;
+        }
+
+        containerArticleSummaries.push(articlesSummaries);
+        collectionNumber++;
     }
 
-    return articlesSummaries;
+    return containerArticleSummaries;
+}
+
+async function getScrapedHtml(response: Promise<Response>) {
+    const data = await response;
+    return await data.text();
+}
+
+function getTime(htmlString: string) {
+    const parser = new DOMParser();
+    const DOM = parser.parseFromString(htmlString, "text/html");
+    const time = DOM.querySelector("article").getAttribute("time");
+
+    return Number(time);
+}
+
+function getUrl(article: Element) {
+    const url = article.querySelector("a").href;
+    return url;
+}
+
+function getTemp(article: Element) {
+    return Number(article.getAttribute("data-temp"));
 }
 
 export function getAttributes(article: Element) {

@@ -56,7 +56,7 @@ async function initSettings() {
 }
 
 async function manageArticleState() {
-    const containerArticleSummaries = getContainerizedArticles();
+    const containerArticleSummaries = await getContainerizedArticles();
 
     const articleState: ArticleState = {
         date: new Date().toISOString(),
@@ -89,19 +89,13 @@ async function addEventListenersForButtons() {
 
     showVoteButton.addEventListener("click", async (e) => {
         const target = e.target as Element;
-
         await shouldShowVoting(!isButtonSelected(target));
     });
 
     // if standard feber hot or cold buttons are clicked, set sorting to standard before saving the state, and then set back to chosen sorting to avoid bug.
     document.querySelectorAll("f-bar-options-item").forEach(async (element) => {
         element.addEventListener("click", async () => {
-            const sortingOrder = await (
-                await getThumbnailSettingsStateFromStorage()
-            ).sorting;
-
-            await manageArticleState();
-            await sortArticles(sortingOrder);
+            // TODO: fix changing sort
         });
     });
 }

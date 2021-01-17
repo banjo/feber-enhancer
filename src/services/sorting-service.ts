@@ -5,10 +5,7 @@ import {
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
-import {
-    createArticleElement,
-    getArticleSummaries,
-} from "./thumbnails-service";
+import { createArticleElement } from "./thumbnails-service";
 
 export async function sortArticles(sortingOrder: SortingOrder) {
     const currentSettings = await getThumbnailSettingsStateFromStorage();
@@ -16,15 +13,12 @@ export async function sortArticles(sortingOrder: SortingOrder) {
 
     setThumbnailSettingsStateToStorage(currentSettings);
 
-    if (sortingOrder === SortingOrder.Standard) {
-        await sortByArticleState();
-        return;
-    }
-
     const containers = document.getElementsByClassName("basicContainer");
+    const articleState = await getArticleStateFromStorage();
 
+    let i = 0;
     for (let collection of containers) {
-        const articleSummaries = getArticleSummaries(collection);
+        const articleSummaries = articleState.articles[i];
 
         collection.innerHTML = "";
 
@@ -81,6 +75,6 @@ function sort(
     }
 
     return newArticles.sort(
-        (a: ArticleSummary, b: ArticleSummary) => a.index - b.index
+        (a: ArticleSummary, b: ArticleSummary) => a.time - b.time
     );
 }

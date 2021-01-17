@@ -10,6 +10,10 @@ export interface ArticleSummary {
     index: number;
     temperature: number;
     attributes: Attribute[];
+    url: string;
+    time: number;
+    scrapedHtml: string;
+    collectionNumber: number;
 }
 
 export interface Attribute {
