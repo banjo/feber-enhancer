@@ -53,6 +53,6 @@ function sort(
     }
 
     return newArticles.sort(
-        (a: ArticleSummary, b: ArticleSummary) => a.time - b.time
+        (a: ArticleSummary, b: ArticleSummary) => b.time - a.time
     );
 }
