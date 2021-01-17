@@ -94,14 +94,14 @@ async function addEventListenersForButtons() {
     });
 
     // if standard feber hot or cold buttons are clicked, set sorting to standard before saving the state, and then set back to chosen sorting to avoid bug.
-    document.querySelectorAll("f-bar-options-item").forEach((element) => {
+    document.querySelectorAll("f-bar-options-item").forEach(async (element) => {
         element.addEventListener("click", async () => {
             const sortingOrder = await (
                 await getThumbnailSettingsStateFromStorage()
             ).sorting;
-            sortArticles(SortingOrder.Standard);
+
             await manageArticleState();
-            sortArticles(sortingOrder);
+            await sortArticles(sortingOrder);
         });
     });
 }

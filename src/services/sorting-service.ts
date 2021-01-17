@@ -17,7 +17,7 @@ export async function sortArticles(sortingOrder: SortingOrder) {
     setThumbnailSettingsStateToStorage(currentSettings);
 
     if (sortingOrder === SortingOrder.Standard) {
-        sortByArticleState();
+        await sortByArticleState();
         return;
     }
 
