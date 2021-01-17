@@ -27,6 +27,16 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     sortArticles(msg.sortDescending);
 });
 
+document.querySelectorAll("f-bar-options-item").forEach((element) => {
+    element.addEventListener("click", async () => {
+        // if standard feber hot or cold buttons are clicked, set sorting to standard before saving the state, and then set back to chosen sorting to avoid bug.
+        const sortingOrder = await getSortingFromStorage();
+        sortArticles(SortingOrder.Standard);
+        await manageArticleState();
+        sortArticles(sortingOrder);
+    });
+});
+
 async function manageArticleState() {
     const containerArticleSummaries = getContainerizedArticles();
 
