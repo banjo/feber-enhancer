@@ -29,6 +29,7 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
 
             collection.appendChild(articleElement);
         }
+        i++;
     }
 }
 
