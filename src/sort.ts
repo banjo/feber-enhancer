@@ -1,4 +1,7 @@
-interface ArticleSummary {
+import { ArticleState } from "./helpers";
+import { getThumbnailStateFromStorage, setSortingToStorage } from "./storage";
+
+export interface ArticleSummary {
     html: string;
     index: number;
     temperature: number;
@@ -16,13 +19,18 @@ export enum SortingOrder {
     Standard = 3,
 }
 
-export function sortArticles(sortingOrder: SortingOrder) {
+export async function sortArticles(sortingOrder: SortingOrder) {
+    setSortingToStorage(sortingOrder);
+
+    if (sortingOrder === SortingOrder.Standard) {
+        sortByArticleState();
+        return;
+    }
+
     const containers = document.getElementsByClassName("basicContainer");
 
     for (let collection of containers) {
-        const articles = collection.getElementsByTagName("f-basic");
-
-        const articleSummaries = getArticleSummaries(articles);
+        const articleSummaries = getArticleSummaries(collection);
 
         collection.innerHTML = "";
 
@@ -36,7 +44,31 @@ export function sortArticles(sortingOrder: SortingOrder) {
     }
 }
 
-function getArticleSummaries(articles: HTMLCollectionOf<Element>) {
+async function sortByArticleState() {
+    const state = await getThumbnailStateFromStorage();
+
+    const containers = document.getElementsByClassName("basicContainer");
+
+    let i = 0;
+    for (let collection of containers) {
+        const articlesForThatDay = state.articles[i];
+        const sortedArticles = sort(articlesForThatDay, SortingOrder.Standard);
+
+        collection.innerHTML = "";
+
+        for (let article of sortedArticles) {
+            let articleElement = createArticleElement(article);
+
+            collection.appendChild(articleElement);
+        }
+
+        i++;
+    }
+}
+
+export function getArticleSummaries(collection: Element) {
+    const articles = collection.getElementsByTagName("f-basic");
+
     const articlesSummaries: ArticleSummary[] = [];
 
     let indexOfArticle = 0;

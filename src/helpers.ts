@@ -1,3 +1,5 @@
+import { ArticleSummary, SortingOrder } from "./sort";
+
 export function createButton(
     id: string,
     text: string,
@@ -19,4 +21,9 @@ export function createButton(
 
 export function insertAfter(newNode: Element, referenceNode: Element) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+export interface ArticleState {
+    date: string;
+    articles: ArticleSummary[][];
 }
