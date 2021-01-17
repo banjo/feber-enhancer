@@ -1,3 +1,5 @@
+import { ArticleSummary } from "../models/interfaces";
+
 export function createButton(
     id: string,
     text: string,
@@ -54,4 +56,43 @@ export function showSpinnerInsteadOf(
 
     element.removeAttribute("style");
     spinner.setAttribute("style", "display: none;");
+}
+
+export function getSummaryFromArticleId(
+    id: number,
+    articles: ArticleSummary[][]
+) {
+    let articleToReturn: null | ArticleSummary = null;
+
+    articles.forEach((collection) => {
+        collection.forEach((article) => {
+            if (article.articleId === id) {
+                articleToReturn = article;
+            }
+        });
+    });
+
+    return articleToReturn;
+}
+
+export function getAllTextInArticle(article: ArticleSummary) {
+    let text = "";
+
+    text += article.mainTitle + "; ";
+    text += article.subTitle + "; ";
+
+    article.bodyText.forEach((p) => {
+        text += p + "; ";
+    });
+
+    return text.toLowerCase();
+}
+
+export function shouldHideElement(element: Element, shouldHide: boolean) {
+    if (shouldHide) {
+        element.classList.add("hide-element");
+        return;
+    }
+
+    element.classList.remove("hide-element");
 }
