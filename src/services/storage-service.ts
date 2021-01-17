@@ -1,15 +1,16 @@
-import { SortingOrder } from "../models/enums";
-import { ArticleState } from "../models/interfaces";
+import { ArticleState, ThumbnailSettingsState } from "../models/interfaces";
 
-export function setSortingToStorage(sorting: SortingOrder) {
-    chrome.storage.local.set({ sorting: sorting });
+export function setThumbnailSettingsStateToStorage(
+    settings: ThumbnailSettingsState
+) {
+    chrome.storage.local.set({ thumbnailSettings: settings });
 }
 
-export async function getSortingFromStorage(): Promise<SortingOrder> {
+export async function getThumbnailSettingsStateFromStorage(): Promise<ThumbnailSettingsState> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.local.get("sorting", function (value) {
-                resolve(value.sorting);
+            chrome.storage.local.get("thumbnailSettings", function (value) {
+                resolve(value.thumbnailSettings);
             });
         } catch (ex) {
             reject(ex);
@@ -17,11 +18,11 @@ export async function getSortingFromStorage(): Promise<SortingOrder> {
     });
 }
 
-export function setThumbnailStateToStorage(thumbnails: ArticleState) {
+export function setArticleStateToStorage(thumbnails: ArticleState) {
     chrome.storage.local.set({ thumbnails: thumbnails });
 }
 
-export function getThumbnailStateFromStorage(): Promise<ArticleState> {
+export function getArticleStateFromStorage(): Promise<ArticleState> {
     return new Promise((resolve, reject) => {
         try {
             chrome.storage.local.get("thumbnails", function (value) {

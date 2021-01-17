@@ -31,3 +31,13 @@
     color: #eee;
     margin: 0 0 0 4px;
 }
+
+.menu-item {
+    margin: 0px 5px 0px 5px;
+}
+
+.separator {
+    margin: 0px 10px 0px 10px;
+    border-left: 3px solid #333333;
+    height: 40px;
+}

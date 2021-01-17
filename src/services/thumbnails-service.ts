@@ -1,5 +1,10 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, Attribute } from "../models/interfaces";
+import { deselectButton, selectButton } from "./helpers";
+import {
+    getThumbnailSettingsStateFromStorage,
+    setThumbnailSettingsStateToStorage,
+} from "./storage-service";
 
 export function getContainerizedArticles() {
     const containers = document.getElementsByClassName("basicContainer");
@@ -80,4 +85,36 @@ export function createArticleElement(article: ArticleSummary) {
         articleElement.setAttribute(attribute.name, attribute.value);
     }
     return articleElement;
+}
+
+export async function shouldShowVoting(showVoting: boolean) {
+    const voteUps = document.querySelectorAll(".tempUP");
+    const voteDowns = document.querySelectorAll(".tempDOWN");
+
+    const display = showVoting ? "display: block;" : "display: none;";
+
+    for (let up of voteUps) {
+        up.setAttribute("style", display);
+    }
+
+    for (let down of voteDowns) {
+        down.setAttribute("style", display);
+    }
+
+    const currentSettings = await getThumbnailSettingsStateFromStorage();
+    currentSettings.showVotes = showVoting;
+    setThumbnailSettingsStateToStorage(currentSettings);
+
+    shouldShowVoteButtonPressed(showVoting);
+}
+
+function shouldShowVoteButtonPressed(showVote: boolean) {
+    const button = document.querySelector("#showVoteButton");
+
+    if (showVote) {
+        selectButton(button);
+        return;
+    }
+
+    deselectButton(button);
 }

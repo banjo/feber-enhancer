@@ -1,8 +1,9 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary } from "../models/interfaces";
 import {
-    getThumbnailStateFromStorage,
-    setSortingToStorage,
+    getArticleStateFromStorage,
+    getThumbnailSettingsStateFromStorage,
+    setThumbnailSettingsStateToStorage,
 } from "./storage-service";
 import {
     createArticleElement,
@@ -10,7 +11,10 @@ import {
 } from "./thumbnails-service";
 
 export async function sortArticles(sortingOrder: SortingOrder) {
-    setSortingToStorage(sortingOrder);
+    const currentSettings = await getThumbnailSettingsStateFromStorage();
+    currentSettings.sorting = sortingOrder;
+
+    setThumbnailSettingsStateToStorage(currentSettings);
 
     if (sortingOrder === SortingOrder.Standard) {
         sortByArticleState();
@@ -35,7 +39,7 @@ export async function sortArticles(sortingOrder: SortingOrder) {
 }
 
 async function sortByArticleState() {
-    const state = await getThumbnailStateFromStorage();
+    const state = await getArticleStateFromStorage();
 
     const containers = document.getElementsByClassName("basicContainer");
 
