@@ -18,6 +18,7 @@ import {
     selectCorrectButton,
     shouldShowVoting,
 } from "./services/thumbnails-service";
+import { searchFilter } from "./services/filter-service";
 
 (async () => {
     try {
@@ -74,14 +75,15 @@ async function manageArticleState() {
         articles: containerArticleSummaries,
     };
 
-    setArticleStateToStorage(articleState);
+    await setArticleStateToStorage(articleState);
 }
 
 async function addEventListenersForButtons() {
-    const hotButton = document.querySelector("#sortHotButton");
-    const coldButton = document.querySelector("#sortColdButton");
-    const standardButton = document.querySelector("#sortStandardButton");
-    const showVoteButton = document.querySelector("#showVoteButton");
+    const hotButton = document.querySelector("#sort-hot-button");
+    const coldButton = document.querySelector("#sort-cold-button");
+    const standardButton = document.querySelector("#sort-standard-button");
+    const showVoteButton = document.querySelector("#show-vote-button");
+    const searchInput = document.querySelector("#search-input");
 
     hotButton.addEventListener("click", async () => {
         await sortThumbnails(SortingOrder.Descending);
@@ -101,6 +103,13 @@ async function addEventListenersForButtons() {
     showVoteButton.addEventListener("click", async (e) => {
         const target = e.target as Element;
         await shouldShowVoting(!isButtonSelected(target));
+    });
+
+    searchInput.addEventListener("keyup", async (event) => {
+        const target = event.target as HTMLTextAreaElement;
+        const value = target.value;
+
+        await searchFilter(value);
     });
 }
 
@@ -123,19 +132,19 @@ function addButtonsToWebpage() {
     insertAfter(pluginSettingsBar, bar);
 
     // Sort hot button
-    const sortHot = createButton("sortHotButton", "Heta först", [
+    const sortHot = createButton("sort-hot-button", "Heta först", [
         "feberhot",
         "menu-item",
     ]);
 
     // sort cold button
-    const sortCold = createButton("sortColdButton", "Kalla först", [
+    const sortCold = createButton("sort-cold-button", "Kalla först", [
         "febercold",
         "menu-item",
     ]);
 
     // sort standard button
-    const sortStandard = createButton("sortStandardButton", "Standard", [
+    const sortStandard = createButton("sort-standard-button", "Standard", [
         "button-selected",
         "menu-item",
     ]);
@@ -145,15 +154,24 @@ function addButtonsToWebpage() {
     separator.classList.add("separator");
 
     // show voting button
-    const showVoteButton = createButton("showVoteButton", "Visa röstning", [
+    const showVoteButton = createButton("show-vote-button", "Visa röstning", [
         "menu-item",
     ]);
+
+    // search filter
+    const searchFilter = document.createElement("input");
+    searchFilter.type = "text";
+    searchFilter.id = "search-input";
+    searchFilter.classList.add("menu-item", "feber-input");
+    searchFilter.placeholder = "Sök";
 
     pluginSettingsBarContainer.appendChild(sortHot);
     pluginSettingsBarContainer.appendChild(sortStandard);
     pluginSettingsBarContainer.appendChild(sortCold);
     pluginSettingsBarContainer.appendChild(separator);
     pluginSettingsBarContainer.appendChild(showVoteButton);
+    pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
+    pluginSettingsBarContainer.appendChild(searchFilter);
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", true);
 }

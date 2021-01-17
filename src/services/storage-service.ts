@@ -25,7 +25,7 @@ export function setArticleStateToStorage(thumbnails: ArticleState) {
 export function getArticleStateFromStorage(): Promise<ArticleState> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.local.get("thumbnails", function (value) {
+            chrome.storage.local.get(null, function (value) {
                 resolve(value.thumbnails);
             });
         } catch (ex) {

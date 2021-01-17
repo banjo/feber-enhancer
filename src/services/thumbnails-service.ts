@@ -33,9 +33,9 @@ export async function getContainerizedArticles() {
 }
 
 export function selectCorrectButton(sortingOrder: SortingOrder) {
-    const hotButton = document.querySelector("#sortHotButton");
-    const coldButton = document.querySelector("#sortColdButton");
-    const standardButton = document.querySelector("#sortStandardButton");
+    const hotButton = document.querySelector("#sort-hot-button");
+    const coldButton = document.querySelector("#sort-cold-button");
+    const standardButton = document.querySelector("#sort-standard-button");
 
     if (sortingOrder === SortingOrder.Standard) {
         hotButton.classList.remove("button-selected");
@@ -80,7 +80,6 @@ async function getArticleSummaries(
                 attributes: getAttributes(article),
                 time: getTime(scrapedHtml),
                 url: getUrl(article),
-                scrapedHtml: scrapedHtml,
                 collectionNumber: collectionNumber,
                 articleId: getArticleId(article),
                 author: getAuthor(scrapedHtml),
@@ -135,7 +134,7 @@ export async function shouldShowVoting(showVoting: boolean) {
 }
 
 function shouldShowVoteButtonPressed(showVote: boolean) {
-    const button = document.querySelector("#showVoteButton");
+    const button = document.querySelector("#show-vote-button");
 
     if (showVote) {
         selectButton(button);

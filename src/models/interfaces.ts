@@ -12,7 +12,6 @@ export interface ArticleSummary {
     attributes: Attribute[];
     url: string;
     time: number;
-    scrapedHtml: string;
     collectionNumber: number;
     articleId: number;
     author: string;
