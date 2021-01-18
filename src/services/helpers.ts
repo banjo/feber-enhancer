@@ -80,6 +80,7 @@ export function getAllTextInArticle(article: ArticleSummary) {
 
     text += article.mainTitle + "; ";
     text += article.subTitle + "; ";
+    text += article.author + "; ";
 
     article.bodyText.forEach((p) => {
         text += p + "; ";
