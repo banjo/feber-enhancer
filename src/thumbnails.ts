@@ -4,6 +4,7 @@ import {
     getSpinnerElement,
     insertAfter,
     isButtonSelected,
+    shouldHideElement,
     showSpinnerInsteadOf,
 } from "./services/helpers";
 import {
@@ -28,7 +29,6 @@ import { searchFilter } from "./services/filter-service";
         await initSettings();
         await addEventListenersForButtons();
     } catch (e) {
-        // Deal with the fact the chain failed
         console.error(e);
     }
 })();
@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 function hideOriginalSettingsBar() {
     const bar = document.querySelector("f-bar-options");
 
-    bar.setAttribute("style", "display: none;");
+    shouldHideElement(bar, true);
 }
 
 async function initSettings() {
@@ -84,6 +84,7 @@ async function addEventListenersForButtons() {
     const standardButton = document.querySelector("#sort-standard-button");
     const showVoteButton = document.querySelector("#show-vote-button");
     const searchInput = document.querySelector("#search-input");
+    const commentsButton = document.querySelector("#sort-comments-button");
 
     hotButton.addEventListener("click", async () => {
         await sortThumbnails(SortingOrder.Descending);
@@ -110,6 +111,11 @@ async function addEventListenersForButtons() {
         const value = target.value;
 
         await searchFilter(value);
+    });
+
+    commentsButton.addEventListener("click", async () => {
+        await sortThumbnails(SortingOrder.Comments)
+        selectCorrectButton(SortingOrder.Comments);
     });
 }
 
@@ -149,6 +155,11 @@ function addButtonsToWebpage() {
         "menu-item",
     ]);
 
+    // sort comments button
+    const sortComments = createButton("sort-comments-button", "Kommentarer", [
+        "menu-item",
+    ]);
+
     // separator
     const separator = document.createElement("div");
     separator.classList.add("separator");
@@ -167,6 +178,7 @@ function addButtonsToWebpage() {
 
     pluginSettingsBarContainer.appendChild(sortHot);
     pluginSettingsBarContainer.appendChild(sortStandard);
+    pluginSettingsBarContainer.appendChild(sortComments);
     pluginSettingsBarContainer.appendChild(sortCold);
     pluginSettingsBarContainer.appendChild(separator);
     pluginSettingsBarContainer.appendChild(showVoteButton);

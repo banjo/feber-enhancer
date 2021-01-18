@@ -36,23 +36,34 @@ export function selectCorrectButton(sortingOrder: SortingOrder) {
     const hotButton = document.querySelector("#sort-hot-button");
     const coldButton = document.querySelector("#sort-cold-button");
     const standardButton = document.querySelector("#sort-standard-button");
+    const commentsButton = document.querySelector("#sort-comments-button");
 
     if (sortingOrder === SortingOrder.Standard) {
         hotButton.classList.remove("button-selected");
         coldButton.classList.remove("button-selected");
+        commentsButton.classList.remove("button-selected");
         standardButton.classList.add("button-selected");
     }
 
     if (sortingOrder === SortingOrder.Ascending) {
         hotButton.classList.remove("button-selected");
         standardButton.classList.remove("button-selected");
+        commentsButton.classList.remove("button-selected");
         coldButton.classList.add("button-selected");
     }
 
     if (sortingOrder === SortingOrder.Descending) {
         hotButton.classList.add("button-selected");
         standardButton.classList.remove("button-selected");
+        commentsButton.classList.remove("button-selected");
         coldButton.classList.remove("button-selected");
+    }
+
+    if (sortingOrder === SortingOrder.Comments) {
+        hotButton.classList.remove("button-selected");
+        coldButton.classList.remove("button-selected");
+        standardButton.classList.remove("button-selected");
+        commentsButton.classList.add("button-selected");
     }
 }
 

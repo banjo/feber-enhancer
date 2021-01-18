@@ -53,6 +53,12 @@ function sort(
         );
     }
 
+    if (sortingOrder === SortingOrder.Comments) {
+        return newArticles.sort(
+            (a: ArticleSummary, b: ArticleSummary) => b.comments - a.comments
+        );
+    }
+
     return newArticles.sort(
         (a: ArticleSummary, b: ArticleSummary) => b.time - a.time
     );
