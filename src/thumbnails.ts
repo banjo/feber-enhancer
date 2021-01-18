@@ -52,17 +52,17 @@ async function initSettings() {
 
     const settings = await getThumbnailSettingsStateFromStorage();
 
+    console.log("Settings: ", settings);
+
     if (!settings) {
         setThumbnailSettingsStateToStorage(initialSettings);
         return;
     }
 
-    await shouldShowVoting(settings.showVotes);
+    await sortThumbnails(settings.sorting);
+    selectCorrectButton(settings.sorting);
 
-    if (settings.sorting !== SortingOrder.Standard) {
-        await sortThumbnails(settings.sorting);
-        selectCorrectButton(settings.sorting);
-    }
+    await shouldShowVoting(settings.showVotes);
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
 }
@@ -114,7 +114,7 @@ async function addEventListenersForButtons() {
     });
 
     commentsButton.addEventListener("click", async () => {
-        await sortThumbnails(SortingOrder.Comments)
+        await sortThumbnails(SortingOrder.Comments);
         selectCorrectButton(SortingOrder.Comments);
     });
 }

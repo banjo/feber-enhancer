@@ -1,6 +1,6 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary } from "../models/interfaces";
-import { deselectButton, selectButton } from "./helpers";
+import { deselectButton, selectButton, shouldHideElement } from "./helpers";
 import {
     getArticleId,
     getAttributes,
@@ -124,8 +124,8 @@ export function createArticleElement(article: ArticleSummary) {
 }
 
 export async function shouldShowVoting(showVoting: boolean) {
-    const voteUps = document.querySelectorAll(".tempUP");
-    const voteDowns = document.querySelectorAll(".tempDOWN");
+    let voteUps = document.querySelectorAll(".tempUP");
+    let voteDowns = document.querySelectorAll(".tempDOWN");
 
     const display = showVoting ? "display: block;" : "display: none;";
 

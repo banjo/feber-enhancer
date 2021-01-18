@@ -5,7 +5,7 @@ import {
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
-import { createArticleElement } from "./thumbnails-service";
+import { createArticleElement, shouldShowVoting } from "./thumbnails-service";
 
 export async function sortThumbnails(sortingOrder: SortingOrder) {
     const currentSettings = await getThumbnailSettingsStateFromStorage();
@@ -31,6 +31,8 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
         }
         i++;
     }
+
+    await shouldShowVoting(currentSettings.showVotes);
 }
 
 function sort(
