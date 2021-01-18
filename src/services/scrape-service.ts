@@ -30,16 +30,14 @@ export function createElementFromString(htmlString: string) {
     return DOM;
 }
 
-export function getTime(htmlString: string) {
-    const DOM = createElementFromString(htmlString);
-    const time = DOM.querySelector("article").getAttribute("time");
+export function getTime(fullArticle: Document) {
+    const time = fullArticle.querySelector("article").getAttribute("time");
 
     return Number(time);
 }
 
-export function getBodyText(htmlString: string) {
-    const DOM = createElementFromString(htmlString);
-    const bodyText = DOM.querySelector(".text");
+export function getBodyText(fullArticle: Document) {
+    const bodyText = fullArticle.querySelector(".text");
 
     const mergedText = Array.from(bodyText.children, ({ textContent }) =>
         textContent.trim()
@@ -48,9 +46,9 @@ export function getBodyText(htmlString: string) {
     return mergedText;
 }
 
-export function getAuthor(htmlString: string) {
-    const DOM = createElementFromString(htmlString);
-    const author = DOM.querySelector("footer")
+export function getAuthor(fullArticle: Document) {
+    const author = fullArticle
+        .querySelector("footer")
         .querySelector("img")
         .getAttribute("alt");
 
@@ -64,7 +62,9 @@ export function getMainTitle(article: Element) {
 }
 
 export function getSubTitle(article: Element) {
-    const subTitle = article.querySelector("h1").querySelectorAll("a")[1]
+    const h1 = article.querySelector("h1");
+
+    const subTitle = h1.querySelectorAll(".feber, .febercold, .feberhot")[0]
         .textContent;
 
     return subTitle;
@@ -76,6 +76,23 @@ export function getComments(article: Element) {
 
     return Number(commentCount);
 }
+
+// export async function getCommentsContent(fullArticle: Document) {
+//     const disqus = fullArticle.querySelector(".showDisqus");
+
+//     const id = disqus.id.replace("showDisqus", "");
+//     const forum = "feber";
+//     const publicKey =
+//         "E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F";
+
+//     const disqusUri = `https://disqus.com/api/3.0/threads/listPosts.json?&api_key=
+//         ${publicKey}&thread:ident=${id}&forum=${forum}`;
+
+//     const example =
+//         "https://disqus.com/api/3.0/threads/listPosts.json?&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F&thread:ident=420397&forum=feber";
+
+//     return [];
+// }
 
 export function getUrl(article: Element) {
     const url = article.querySelector("a").href;

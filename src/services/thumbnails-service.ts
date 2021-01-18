@@ -2,6 +2,7 @@ import { SortingOrder } from "../models/enums";
 import { ArticleSummary } from "../models/interfaces";
 import { deselectButton, selectButton, shouldHideElement } from "./helpers";
 import {
+    createElementFromString,
     getArticleId,
     getAttributes,
     getAuthor,
@@ -83,21 +84,22 @@ async function getArticleSummaries(
         let indexOfArticle = 0;
         for (let article of articles) {
             const scrapedHtml = await getScrapedHtml(scraped[scrapeNumber]);
+            const fullArticle = createElementFromString(scrapedHtml);
 
             let articleSummary: ArticleSummary = {
                 html: article.innerHTML,
                 index: indexOfArticle,
                 temperature: getTemp(article),
                 attributes: getAttributes(article),
-                time: getTime(scrapedHtml),
+                time: getTime(fullArticle),
                 url: getUrl(article),
                 collectionNumber: collectionNumber,
                 articleId: getArticleId(article),
-                author: getAuthor(scrapedHtml),
+                author: getAuthor(fullArticle),
                 mainTitle: getMainTitle(article),
                 subTitle: getSubTitle(article),
                 comments: getComments(article),
-                bodyText: getBodyText(scrapedHtml),
+                bodyText: getBodyText(fullArticle),
             };
 
             articlesSummaries.push(articleSummary);
