@@ -2,6 +2,7 @@ import { sortThumbnails } from "./services/sorting-service";
 import {
     createButton,
     createSelect,
+    elementInViewPort,
     getSpinnerElement,
     insertAfter,
     isButtonSelected,
@@ -26,6 +27,7 @@ import {
     shouldShowVoting,
 } from "./services/thumbnails-service";
 import { filterBy } from "./services/filter-service";
+import { getNextPage } from "./services/scrape-service";
 
 (async () => {
     try {
@@ -173,6 +175,13 @@ async function addEventListenersForButtons() {
 
         await filterBy(options);
     });
+
+    window.onscroll = function () {
+        const nextPage = document.querySelector(".nextPage").parentElement;
+        if (elementInViewPort(nextPage)) {
+            getNextPage(nextPage)
+        }
+    };
 }
 
 function addButtonsToWebpage() {

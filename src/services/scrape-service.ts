@@ -1,4 +1,5 @@
 import { Attribute } from "../models/interfaces";
+import { getArticleSummaries } from "./thumbnails-service";
 
 export async function scrapeArticlesFromThumbnails(
     containers: HTMLCollectionOf<Element>
@@ -119,4 +120,25 @@ export function getArticleId(article: Element) {
     const id = idWithText.replace("ArticleBasic_", "");
 
     return Number(id);
+}
+
+export async function getNextPage(nextPageButton: Element) {
+    console.log(nextPageButton);
+    const href = nextPageButton.getAttribute("href");
+    const link = window.location.href + href;
+
+    const response = await fetch(link);
+    const html = await response.text();
+
+    const dom = createElementFromString(html);
+
+    const containers = dom.getElementsByClassName("basicContainer");
+    let scrapedArticles = await scrapeArticlesFromThumbnails(containers);
+
+    const containerArticleSummaries = await getArticleSummaries(
+        containers,
+        scrapedArticles
+    );
+
+    console.log(containerArticleSummaries);
 }

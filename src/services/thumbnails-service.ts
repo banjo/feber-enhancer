@@ -91,7 +91,7 @@ function getAllAuthorsFromArticles(summaries: ArticleSummary[][]) {
     return authors;
 }
 
-async function getArticleSummaries(
+export async function getArticleSummaries(
     containers: HTMLCollectionOf<Element>,
     scraped: Promise<Response>[]
 ) {

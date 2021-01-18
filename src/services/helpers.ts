@@ -112,3 +112,12 @@ export function shouldHideElement(element: Element, shouldHide: boolean) {
 export function elementIsHidden(element: Element) {
     return element.classList.contains("hide-element");
 }
+
+export function elementInViewPort(element: Element) {
+    var rect = element.getBoundingClientRect();
+    var viewHeight = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight
+    );
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
