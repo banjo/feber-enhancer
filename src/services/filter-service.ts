@@ -5,18 +5,26 @@ import {
     shouldHideElement,
 } from "./helpers";
 import { getArticleId } from "./scrape-service";
-import { getArticleStateFromStorage } from "./storage-service";
+import {
+    getArticleStateFromStorage,
+    getExtraArticleStateFromStorage,
+} from "./storage-service";
 
 export async function filterBy(options: FilterOptions) {
     const allArticles = document.getElementsByTagName("f-basic");
-    const articleSummaries = await (await getArticleStateFromStorage())
+    const standardArticleSummaries = await (await getArticleStateFromStorage())
         .articles;
+    const temporaryArticleSummaries = await getExtraArticleStateFromStorage();
+
+    const mergedArticleSummaries = standardArticleSummaries.concat(
+        temporaryArticleSummaries
+    );
 
     options = getMissingValues(options);
 
     for (let article of allArticles) {
         const id = getArticleId(article);
-        const summary = getSummaryFromArticleId(id, articleSummaries);
+        const summary = getSummaryFromArticleId(id, mergedArticleSummaries);
 
         const queryExists = getQueryExists(options.query, summary);
         const authorExists = getAuthorExists(options.author, summary);
