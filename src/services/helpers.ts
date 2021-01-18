@@ -17,6 +17,17 @@ export function createButton(
     return button;
 }
 
+export function createSelect(id: string, classes: string[]): HTMLSelectElement {
+    const selectInput = document.createElement("select");
+    selectInput.id = id;
+
+    for (let c of classes) {
+        selectInput.classList.add(c);
+    }
+
+    return selectInput;
+}
+
 export function insertAfter(newNode: Element, referenceNode: Element) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }

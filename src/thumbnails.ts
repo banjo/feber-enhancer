@@ -1,6 +1,7 @@
 import { sortThumbnails } from "./services/sorting-service";
 import {
     createButton,
+    createSelect,
     getSpinnerElement,
     insertAfter,
     isButtonSelected,
@@ -15,19 +16,22 @@ import {
 import { ArticleState, ThumbnailSettingsState } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
 import {
+    getAllAuthors,
     getContainerizedArticles,
     selectCorrectButton,
     shouldShowVoting,
 } from "./services/thumbnails-service";
-import { searchFilter } from "./services/filter-service";
+import { filterByAuthor, searchFilter } from "./services/filter-service";
 
 (async () => {
     try {
         addButtonsToWebpage();
         hideOriginalSettingsBar();
-        await manageArticleState();
         await initSettings();
+        await manageArticleState();
+        await initFields();
         await addEventListenersForButtons();
+        await finishLoad();
     } catch (e) {
         console.error(e);
     }
@@ -44,25 +48,51 @@ function hideOriginalSettingsBar() {
     shouldHideElement(bar, true);
 }
 
+async function finishLoad() {
+    showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
+}
+
+async function initFields() {
+    const selectAuthor = document.querySelector("#select-author");
+    const allAuthors = await getAllAuthors();
+    const all = new Option("Författare", "all");
+    all.selected = true;
+    all.disabled = true;
+    selectAuthor.appendChild(all);
+
+    allAuthors.forEach((author) => {
+        const option = new Option(author, author);
+        option.value = author;
+        option.text = author;
+        selectAuthor.appendChild(option);
+    });
+}
+
 async function initSettings() {
     const initialSettings: ThumbnailSettingsState = {
         showVotes: false,
         sorting: SortingOrder.Standard,
+        filterByAuthor: "all",
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
 
-    if (!settings) {
+    let updated = false;
+    Object.keys(initialSettings).forEach((key) => {
+        if (settings[key] == null) {
+            settings[key] = initialSettings[key];
+            updated = true;
+        }
+    });
+
+    if (!settings || updated) {
         setThumbnailSettingsStateToStorage(initialSettings);
-        return;
     }
 
     await sortThumbnails(settings.sorting);
     selectCorrectButton(settings.sorting);
 
     await shouldShowVoting(settings.showVotes);
-
-    showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
 }
 
 async function manageArticleState() {
@@ -83,6 +113,7 @@ async function addEventListenersForButtons() {
     const showVoteButton = document.querySelector("#show-vote-button");
     const searchInput = document.querySelector("#search-input");
     const commentsButton = document.querySelector("#sort-comments-button");
+    const selectAuthor = document.querySelector("#select-author");
 
     hotButton.addEventListener("click", async () => {
         await sortThumbnails(SortingOrder.Descending);
@@ -115,6 +146,24 @@ async function addEventListenersForButtons() {
         await sortThumbnails(SortingOrder.Comments);
         selectCorrectButton(SortingOrder.Comments);
     });
+
+    selectAuthor.addEventListener("change", async () => {
+        const defaultOption = selectAuthor.querySelector(
+            "option[value='all']"
+        ) as HTMLSelectElement;
+
+        const select = selectAuthor as HTMLSelectElement;
+
+        if (select.value === "all") {
+            defaultOption.textContent = "Författare";
+            defaultOption.disabled = true;
+        } else {
+            defaultOption.textContent = "Alla";
+            defaultOption.disabled = false;
+        }
+
+        filterByAuthor(select.value);
+    });
 }
 
 function addButtonsToWebpage() {
@@ -129,8 +178,6 @@ function addButtonsToWebpage() {
     settingsBarTitle.classList.add("settings-bar-title");
     settingsBarTitle.textContent = "Feber Enhancer";
     pluginSettingsBar.appendChild(settingsBarTitle);
-
-    // pluginSettingsBar.textContent = "Feber Enhancer";
 
     const pluginSettingsBarContainer = document.createElement("div");
     pluginSettingsBarContainer.id = "settings-bar-container";
@@ -180,6 +227,12 @@ function addButtonsToWebpage() {
     searchFilter.classList.add("menu-item", "feber-input");
     searchFilter.placeholder = "Sök";
 
+    // select author
+    const selectAuthor = createSelect("select-author", [
+        "menu-item",
+        "feber-input",
+    ]);
+
     pluginSettingsBarContainer.appendChild(sortHot);
     pluginSettingsBarContainer.appendChild(sortStandard);
     pluginSettingsBarContainer.appendChild(sortComments);
@@ -188,6 +241,8 @@ function addButtonsToWebpage() {
     pluginSettingsBarContainer.appendChild(showVoteButton);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
     pluginSettingsBarContainer.appendChild(searchFilter);
+    pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
+    pluginSettingsBarContainer.appendChild(selectAuthor);
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", true);
 }

@@ -17,6 +17,7 @@ import {
     scrapeArticlesFromThumbnails,
 } from "./scrape-service";
 import {
+    getArticleStateFromStorage,
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
@@ -66,6 +67,27 @@ export function selectCorrectButton(sortingOrder: SortingOrder) {
         standardButton.classList.remove("button-selected");
         commentsButton.classList.add("button-selected");
     }
+}
+
+export async function getAllAuthors() {
+    const state = await getArticleStateFromStorage();
+    const allAuthors = getAllAuthorsFromArticles(state.articles);
+
+    return allAuthors;
+}
+
+function getAllAuthorsFromArticles(summaries: ArticleSummary[][]) {
+    const authors: string[] = [];
+
+    for (let collection of summaries) {
+        for (let summary of collection) {
+            if (!authors.includes(summary.author)) {
+                authors.push(summary.author);
+            }
+        }
+    }
+
+    return authors;
 }
 
 async function getArticleSummaries(
