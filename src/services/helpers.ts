@@ -108,3 +108,7 @@ export function shouldHideElement(element: Element, shouldHide: boolean) {
 
     element.classList.remove("hide-element");
 }
+
+export function elementIsHidden(element: Element) {
+    return element.classList.contains("hide-element");
+}

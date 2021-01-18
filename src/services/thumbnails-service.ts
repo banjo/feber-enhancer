@@ -1,5 +1,6 @@
 import { SortingOrder } from "../models/enums";
-import { ArticleSummary } from "../models/interfaces";
+import { ArticleSummary, FilterOptions } from "../models/interfaces";
+import { filterBy } from "./filter-service";
 import { deselectButton, selectButton, shouldHideElement } from "./helpers";
 import {
     createElementFromString,
@@ -188,4 +189,16 @@ export function showSettingsBar(shouldShow: boolean) {
     }
 
     pluginSettingsBar.setAttribute("style", "display: none;");
+}
+
+export async function handleSelectAuthor(author: string) {
+    const selectAuthor = document.querySelector(
+        "#select-author"
+    ) as HTMLSelectElement;
+
+    selectAuthor.value = author;
+
+    const options: FilterOptions = { author };
+
+    await filterBy(options);
 }

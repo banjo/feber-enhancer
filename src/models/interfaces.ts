@@ -29,5 +29,9 @@ export interface Attribute {
 export interface ThumbnailSettingsState {
     sorting: SortingOrder;
     showVotes: boolean;
-    filterByAuthor: string;
+}
+
+export interface FilterOptions {
+    query?: string;
+    author?: string;
 }

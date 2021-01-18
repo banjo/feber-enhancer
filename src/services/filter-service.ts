@@ -1,57 +1,80 @@
+import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import {
     getAllTextInArticle,
     getSummaryFromArticleId,
     shouldHideElement,
 } from "./helpers";
 import { getArticleId } from "./scrape-service";
-import {
-    getArticleStateFromStorage,
-    getThumbnailSettingsStateFromStorage,
-    setThumbnailSettingsStateToStorage,
-} from "./storage-service";
+import { getArticleStateFromStorage } from "./storage-service";
 
-export async function searchFilter(query: string) {
+export async function filterBy(options: FilterOptions) {
     const allArticles = document.getElementsByTagName("f-basic");
     const articleSummaries = await (await getArticleStateFromStorage())
         .articles;
+
+    options = getMissingValues(options);
 
     for (let article of allArticles) {
         const id = getArticleId(article);
         const summary = getSummaryFromArticleId(id, articleSummaries);
-        const allText = getAllTextInArticle(summary);
 
-        if (!allText.includes(query.toLowerCase())) {
-            shouldHideElement(article, true);
-            continue;
-        }
+        const queryExists = getQueryExists(options.query, summary);
+        const authorExists = getAuthorExists(options.author, summary);
 
-        shouldHideElement(article, false);
-    }
-}
-
-export async function filterByAuthor(author: string) {
-    const allArticles = document.getElementsByTagName("f-basic");
-    const articleSummaries = await (await getArticleStateFromStorage())
-        .articles;
-
-    for (let article of allArticles) {
-        if (author === "all") {
+        if (queryExists === true && authorExists === true) {
             shouldHideElement(article, false);
             continue;
         }
 
-        const id = getArticleId(article);
-        const summary = getSummaryFromArticleId(id, articleSummaries);
+        shouldHideElement(article, true);
+    }
+}
 
-        if (summary.author.toLowerCase() !== author.toLowerCase()) {
-            shouldHideElement(article, true);
-            continue;
-        }
+function getMissingValues(options: FilterOptions) {
+    const searchInput = document.querySelector(
+        "#search-input"
+    ) as HTMLTextAreaElement;
+    const selectAuthor = document.querySelector(
+        "#select-author"
+    ) as HTMLSelectElement;
 
-        shouldHideElement(article, false);
+    const newQuery = searchInput.value;
+    const newAuthor = selectAuthor.value;
+
+    if (newQuery) {
+        options.query = newQuery;
     }
 
-    const settings = await getThumbnailSettingsStateFromStorage();
-    settings.filterByAuthor = author;
-    setThumbnailSettingsStateToStorage(settings);
+    if (newAuthor) {
+        options.author = newAuthor;
+    }
+
+    return options;
+}
+
+function getQueryExists(
+    query: string,
+    summary: ArticleSummary
+): boolean | null {
+    if (query == null) {
+        return true;
+    }
+
+    const allText = getAllTextInArticle(summary);
+    return allText.includes(query.toLowerCase());
+}
+
+function getAuthorExists(
+    author: string,
+    summary: ArticleSummary
+): boolean | null {
+    if (author == null) {
+        return null;
+    }
+
+    if (author === "all") {
+        return true;
+    }
+
+    return summary.author.toLowerCase() === author.toLowerCase();
 }

@@ -1,6 +1,6 @@
 import { SortingOrder } from "../models/enums";
-import { ArticleSummary } from "../models/interfaces";
-import { filterByAuthor } from "./filter-service";
+import { ArticleSummary, FilterOptions } from "../models/interfaces";
+import { filterBy } from "./filter-service";
 import {
     getArticleStateFromStorage,
     getThumbnailSettingsStateFromStorage,
@@ -35,7 +35,8 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
 
     await shouldShowVoting(currentSettings.showVotes);
 
-    await filterByAuthor(currentSettings.filterByAuthor);
+    const options: FilterOptions = {};
+    await filterBy(options);
 }
 
 function sort(

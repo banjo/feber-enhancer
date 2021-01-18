@@ -13,7 +13,11 @@ import {
     setArticleStateToStorage,
     setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
-import { ArticleState, ThumbnailSettingsState } from "./models/interfaces";
+import {
+    ArticleState,
+    FilterOptions,
+    ThumbnailSettingsState,
+} from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
 import {
     getAllAuthors,
@@ -21,7 +25,7 @@ import {
     selectCorrectButton,
     shouldShowVoting,
 } from "./services/thumbnails-service";
-import { filterByAuthor, searchFilter } from "./services/filter-service";
+import { filterBy } from "./services/filter-service";
 
 (async () => {
     try {
@@ -49,6 +53,13 @@ function hideOriginalSettingsBar() {
 }
 
 async function finishLoad() {
+    const settings = await getThumbnailSettingsStateFromStorage();
+
+    await sortThumbnails(settings.sorting);
+    selectCorrectButton(settings.sorting);
+
+    await shouldShowVoting(settings.showVotes);
+
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
 }
 
@@ -72,7 +83,6 @@ async function initSettings() {
     const initialSettings: ThumbnailSettingsState = {
         showVotes: false,
         sorting: SortingOrder.Standard,
-        filterByAuthor: "all",
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
@@ -88,11 +98,6 @@ async function initSettings() {
     if (!settings || updated) {
         setThumbnailSettingsStateToStorage(initialSettings);
     }
-
-    await sortThumbnails(settings.sorting);
-    selectCorrectButton(settings.sorting);
-
-    await shouldShowVoting(settings.showVotes);
 }
 
 async function manageArticleState() {
@@ -137,9 +142,11 @@ async function addEventListenersForButtons() {
 
     searchInput.addEventListener("keyup", async (event) => {
         const target = event.target as HTMLTextAreaElement;
-        const value = target.value;
+        const query = target.value;
 
-        await searchFilter(value);
+        const options: FilterOptions = { author: null, query };
+
+        await filterBy(options);
     });
 
     commentsButton.addEventListener("click", async () => {
@@ -162,7 +169,9 @@ async function addEventListenersForButtons() {
             defaultOption.disabled = false;
         }
 
-        filterByAuthor(select.value);
+        const options: FilterOptions = { author: select.value };
+
+        await filterBy(options);
     });
 }
 
