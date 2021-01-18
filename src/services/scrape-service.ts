@@ -1,15 +1,25 @@
 import { Attribute } from "../models/interfaces";
-import { getArticleSummaries } from "./thumbnails-service";
+import { getDayAfter, getDayBefore, insertAfter } from "./helpers";
+import {
+    createArticleElement,
+    getArticleSummaries,
+} from "./thumbnails-service";
 
 export async function scrapeArticlesFromThumbnails(
     containers: HTMLCollectionOf<Element>
 ) {
-    const allUrls = [];
+    let allUrls: string[] = [];
 
     for (let collection of containers) {
         const articles = collection.getElementsByTagName("f-basic");
         for (let article of articles) {
-            allUrls.push(getUrl(article));
+            let url = getUrl(article);
+
+            if (url.includes("tjock.se")) {
+                url = null;
+            }
+
+            allUrls.push(url);
         }
     }
 
@@ -132,13 +142,81 @@ export async function getNextPage(nextPageButton: Element) {
 
     const dom = createElementFromString(html);
 
-    const containers = dom.getElementsByClassName("basicContainer");
-    let scrapedArticles = await scrapeArticlesFromThumbnails(containers);
-
-    const containerArticleSummaries = await getArticleSummaries(
-        containers,
-        scrapedArticles
+    const daysOnNextPage = getDaysOnNextPage(dom);
+    const containerArticleSummariesOnNextPage = await getContainerArticleSummariesOnNextPage(
+        dom
     );
 
-    console.log(containerArticleSummaries);
+    const lastDayOnCurrentPage = getLastDayOnCurrentPage();
+
+    const containersOnCurrentPage = document.getElementsByClassName(
+        "basicContainer"
+    );
+    let lastContainer =
+        containersOnCurrentPage[containersOnCurrentPage.length - 1];
+
+    let i = 0;
+    const firstDayOnNextPage = daysOnNextPage[i];
+    if (lastDayOnCurrentPage === firstDayOnNextPage) {
+        containerArticleSummariesOnNextPage[i].forEach((summary) => {
+            const article = createArticleElement(summary);
+            lastContainer.appendChild(article);
+        });
+        i++;
+    }
+
+    for (i; i < containerArticleSummariesOnNextPage.length; i++) {
+        const newDateHeader = document.createElement("header");
+        newDateHeader.classList.add("date");
+        newDateHeader.textContent = daysOnNextPage[i];
+
+        const newContainer = document.createElement("div");
+        newContainer.className = "puffContainer basicContainer after";
+
+        containerArticleSummariesOnNextPage[i].forEach((summary) => {
+            const article = createArticleElement(summary);
+            newContainer.appendChild(article);
+        });
+
+        insertAfter(newDateHeader, lastContainer);
+        insertAfter(newContainer, newDateHeader);
+        lastContainer = newContainer;
+    }
+}
+function getLastDayOnCurrentPage() {
+    const dateHeadersOnCurrentPage = document.querySelectorAll(`.date`);
+    const lastDateHeader =
+        dateHeadersOnCurrentPage[dateHeadersOnCurrentPage.length - 1];
+
+    const lastDay = lastDateHeader.textContent.trim().toLowerCase();
+    return lastDay;
+}
+
+async function getContainerArticleSummariesOnNextPage(dom: Document) {
+    const containersOnNextPage = dom.getElementsByClassName("basicContainer");
+    let scrapedArticles = await scrapeArticlesFromThumbnails(
+        containersOnNextPage
+    );
+
+    const containerArticleSummariesOnNextPage = await getArticleSummaries(
+        containersOnNextPage,
+        scrapedArticles
+    );
+    return containerArticleSummariesOnNextPage;
+}
+
+function getDaysOnNextPage(dom: Document) {
+    const dateHeadersOnNewPage = dom.querySelectorAll(".date");
+
+    const daysOnNextPage = [];
+    const firstDayOnNewPage = getDayAfter(
+        dateHeadersOnNewPage[0].textContent.trim().toLowerCase()
+    );
+
+    daysOnNextPage.push(firstDayOnNewPage); // the day that is not shown
+
+    dateHeadersOnNewPage.forEach((date) => {
+        daysOnNextPage.push(date.textContent.trim().toLowerCase());
+    });
+    return daysOnNextPage;
 }

@@ -176,10 +176,17 @@ async function addEventListenersForButtons() {
         await filterBy(options);
     });
 
-    window.onscroll = function () {
+    let scrapeStarted = false;
+    window.onscroll = async function () {
         const nextPage = document.querySelector(".nextPage").parentElement;
-        if (elementInViewPort(nextPage)) {
-            getNextPage(nextPage)
+        if (elementInViewPort(nextPage) && !scrapeStarted) {
+            scrapeStarted = true;
+            await getNextPage(nextPage);
+            const href = nextPage.getAttribute("href");
+            const increasedValue = Number(href.replace("?p=", "")) + 1;
+            const newHref = "?p=" + increasedValue;
+            nextPage.setAttribute("href", newHref);
+            scrapeStarted = false;
         }
     };
 }

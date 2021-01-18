@@ -106,26 +106,33 @@ export async function getArticleSummaries(
 
         let indexOfArticle = 0;
         for (let article of articles) {
-            const scrapedHtml = await getScrapedHtml(scraped[scrapeNumber]);
-            const fullArticle = createElementFromString(scrapedHtml);
+            const url = getUrl(article);
 
-            let articleSummary: ArticleSummary = {
-                html: article.innerHTML,
-                index: indexOfArticle,
-                temperature: getTemp(article),
-                attributes: getAttributes(article),
-                time: getTime(fullArticle),
-                url: getUrl(article),
-                collectionNumber: collectionNumber,
-                articleId: getArticleId(article),
-                author: getAuthor(fullArticle),
-                mainTitle: getMainTitle(article),
-                subTitle: getSubTitle(article),
-                comments: getComments(article),
-                bodyText: getBodyText(fullArticle),
-            };
+            try {
+                const scrapedHtml = await getScrapedHtml(scraped[scrapeNumber]);
+                const fullArticle = createElementFromString(scrapedHtml);
 
-            articlesSummaries.push(articleSummary);
+                let articleSummary: ArticleSummary = {
+                    html: article.innerHTML,
+                    index: indexOfArticle,
+                    temperature: getTemp(article),
+                    attributes: getAttributes(article),
+                    time: getTime(fullArticle),
+                    url: url,
+                    collectionNumber: collectionNumber,
+                    articleId: getArticleId(article),
+                    author: getAuthor(fullArticle),
+                    mainTitle: getMainTitle(article),
+                    subTitle: getSubTitle(article),
+                    comments: getComments(article),
+                    bodyText: getBodyText(fullArticle),
+                };
+
+                articlesSummaries.push(articleSummary);
+            } catch (error) {
+                console.error(error);
+                continue;
+            }
 
             scrapeNumber++;
             indexOfArticle++;

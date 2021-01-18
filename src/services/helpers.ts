@@ -121,3 +121,43 @@ export function elementInViewPort(element: Element) {
     );
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
 }
+
+export function getDayBefore(day: string) {
+    const days = [
+        "måndag",
+        "tisdag",
+        "onsdag",
+        "torsdag",
+        "fredag",
+        "lördag",
+        "söndag",
+    ];
+
+    const index = days.indexOf(day);
+
+    if (index === 0) {
+        return days[days.length - 1];
+    }
+
+    return days[index - 1];
+}
+
+export function getDayAfter(day: string) {
+    const days = [
+        "måndag",
+        "tisdag",
+        "onsdag",
+        "torsdag",
+        "fredag",
+        "lördag",
+        "söndag",
+    ];
+
+    const index = days.indexOf(day);
+
+    if (index === days.length - 1) {
+        return days[0];
+    }
+
+    return days[index + 1];
+}
