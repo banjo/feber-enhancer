@@ -140,7 +140,7 @@ export function getArticleId(article: Element) {
 }
 
 export async function getNextPage(nextPageButton: Element) {
-    const href = nextPageButton.getAttribute("href");
+    const href = nextPageButton.querySelector("a").getAttribute("href");
     const link = window.location.href + href;
 
     const response = await fetch(link);
