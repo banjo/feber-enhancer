@@ -52,8 +52,6 @@ async function initSettings() {
 
     const settings = await getThumbnailSettingsStateFromStorage();
 
-    console.log("Settings: ", settings);
-
     if (!settings) {
         setThumbnailSettingsStateToStorage(initialSettings);
         return;
@@ -126,7 +124,13 @@ function addButtonsToWebpage() {
     const pluginSettingsBar = document.createElement("div");
     pluginSettingsBar.classList.add("settings-bar");
     pluginSettingsBar.id = "settings-bar";
-    pluginSettingsBar.textContent = "Feber Enhancer";
+
+    const settingsBarTitle = document.createElement("div");
+    settingsBarTitle.classList.add("settings-bar-title");
+    settingsBarTitle.textContent = "Feber Enhancer";
+    pluginSettingsBar.appendChild(settingsBarTitle);
+
+    // pluginSettingsBar.textContent = "Feber Enhancer";
 
     const pluginSettingsBarContainer = document.createElement("div");
     pluginSettingsBarContainer.id = "settings-bar-container";
