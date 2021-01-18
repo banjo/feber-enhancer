@@ -1,8 +1,10 @@
+import { merge } from "jquery";
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import { filterBy } from "./filter-service";
 import {
     getArticleStateFromStorage,
+    getExtraArticleStateFromStorage,
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
@@ -16,10 +18,18 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
 
     const containers = document.getElementsByClassName("basicContainer");
     const articleState = await getArticleStateFromStorage();
+    const extraArticles = await getExtraArticleStateFromStorage();
 
     let i = 0;
+    let j = 0;
     for (let collection of containers) {
-        const articleSummaries = articleState.articles[i];
+        let articleSummaries = articleState.articles[i];
+
+        // articles from infinite scroll, with state from another storage
+        if (articleSummaries == null) {
+            articleSummaries = extraArticles[j];
+            j++;
+        }
 
         collection.innerHTML = "";
 

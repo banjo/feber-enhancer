@@ -12,6 +12,7 @@ import {
 import {
     getThumbnailSettingsStateFromStorage,
     setArticleStateToStorage,
+    setExtraArticleStateToStorage,
     setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
 import {
@@ -100,6 +101,8 @@ async function initSettings() {
     if (!settings || updated) {
         setThumbnailSettingsStateToStorage(initialSettings);
     }
+
+    setExtraArticleStateToStorage([]);
 }
 
 async function manageArticleState() {
@@ -186,6 +189,11 @@ async function addEventListenersForButtons() {
             const increasedValue = Number(href.replace("?p=", "")) + 1;
             const newHref = "?p=" + increasedValue;
             nextPage.setAttribute("href", newHref);
+
+            await sortThumbnails(SortingOrder.Standard);
+            selectCorrectButton(SortingOrder.Standard);
+            await filterBy({});
+
             scrapeStarted = false;
         }
     };

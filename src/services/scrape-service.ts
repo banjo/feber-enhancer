@@ -1,5 +1,12 @@
-import { Attribute } from "../models/interfaces";
+import { ArticleSummary, Attribute } from "../models/interfaces";
 import { getDayAfter, getDayBefore, insertAfter } from "./helpers";
+import {
+    getArticleStateFromStorage,
+    getExtraArticleStateFromStorage,
+    getThumbnailSettingsStateFromStorage,
+    setArticleStateToStorage,
+    setExtraArticleStateToStorage,
+} from "./storage-service";
 import {
     createArticleElement,
     getArticleSummaries,
@@ -133,7 +140,6 @@ export function getArticleId(article: Element) {
 }
 
 export async function getNextPage(nextPageButton: Element) {
-    console.log(nextPageButton);
     const href = nextPageButton.getAttribute("href");
     const link = window.location.href + href;
 
@@ -155,12 +161,20 @@ export async function getNextPage(nextPageButton: Element) {
     let lastContainer =
         containersOnCurrentPage[containersOnCurrentPage.length - 1];
 
+    const currentArticleSummaries = await (await getArticleStateFromStorage())
+        .articles;
+    const newArticleSummaries: ArticleSummary[][] =
+        (await getExtraArticleStateFromStorage()) || [];
+
     let i = 0;
     const firstDayOnNextPage = daysOnNextPage[i];
     if (lastDayOnCurrentPage === firstDayOnNextPage) {
         containerArticleSummariesOnNextPage[i].forEach((summary) => {
             const article = createArticleElement(summary);
             lastContainer.appendChild(article);
+            currentArticleSummaries[currentArticleSummaries.length - 1].push(
+                summary
+            );
         });
         i++;
     }
@@ -173,16 +187,27 @@ export async function getNextPage(nextPageButton: Element) {
         const newContainer = document.createElement("div");
         newContainer.className = "puffContainer basicContainer after";
 
+        const newSummaryForTheDay: ArticleSummary[] = [];
         containerArticleSummariesOnNextPage[i].forEach((summary) => {
             const article = createArticleElement(summary);
             newContainer.appendChild(article);
+            newSummaryForTheDay.push(summary);
         });
+
+        newArticleSummaries.push(newSummaryForTheDay);
 
         insertAfter(newDateHeader, lastContainer);
         insertAfter(newContainer, newDateHeader);
         lastContainer = newContainer;
     }
+
+    setExtraArticleStateToStorage(newArticleSummaries);
+    setArticleStateToStorage({
+        date: new Date().toISOString(),
+        articles: currentArticleSummaries,
+    });
 }
+
 function getLastDayOnCurrentPage() {
     const dateHeadersOnCurrentPage = document.querySelectorAll(`.date`);
     const lastDateHeader =
