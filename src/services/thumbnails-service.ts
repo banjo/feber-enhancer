@@ -1,7 +1,7 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import { filterBy } from "./filter-service";
-import { deselectButton, selectButton, shouldHideElement } from "./helpers";
+import { deselectButton, getSpinnerElement, insertAfter, selectButton, shouldHideElement, showSpinnerInsteadOf } from "./helpers";
 import {
     createElementFromString,
     getArticleId,
@@ -208,4 +208,35 @@ export async function handleSelectAuthor(author: string) {
     const options: FilterOptions = { author };
 
     await filterBy(options);
+}
+
+export function createNewNextButtonAndReplaceOld() {
+    const oldNextButton = document.querySelector(".nextPage");
+    const parent = oldNextButton.parentElement;
+    const href = parent.getAttribute("href");
+    parent.innerHTML = "";
+
+    const allContainers = document.querySelectorAll(".basicContainer");
+    const lastContainer = allContainers[allContainers.length - 1];
+
+    const div = document.createElement("div");
+    div.classList.add("nextPage");
+
+    const divContainer = document.createElement("div");
+    divContainer.id = "next-page-button-container";
+    div.appendChild(divContainer);
+
+    const text = document.createElement("a");
+    text.id = "next-page-link";
+    text.text = "Nästa sida";
+    text.href = href;
+    divContainer.appendChild(text);
+
+    const spinner = getSpinnerElement("next-spinner");
+    divContainer.appendChild(spinner);
+
+    insertAfter(div, lastContainer);
+
+    showSpinnerInsteadOf("next-page-link", "next-spinner", false);
+    return div;
 }

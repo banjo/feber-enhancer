@@ -22,6 +22,7 @@ import {
 } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
 import {
+    createNewNextButtonAndReplaceOld,
     getAllAuthors,
     getContainerizedArticles,
     selectCorrectButton,
@@ -180,45 +181,17 @@ async function addEventListenersForButtons() {
     });
 
     let scrapeStarted = false;
-
-    const oldNextButton = document.querySelector(".nextPage");
-    const parent = oldNextButton.parentElement;
-    const href = parent.getAttribute("href");
-    parent.innerHTML = "";
-
-    const allContainers = document.querySelectorAll(".basicContainer");
-    const lastContainer = allContainers[allContainers.length - 1];
-
-    const div = document.createElement("div");
-    div.classList.add("nextPage");
-
-    const divContainer = document.createElement("div");
-    divContainer.id = "next-page-button-container";
-    div.appendChild(divContainer);
-
-    const text = document.createElement("a");
-    text.id = "next-page-link";
-    text.text = "Nästa sida";
-    text.href = href;
-    divContainer.appendChild(text);
-
-    const spinner = getSpinnerElement("next-spinner");
-    divContainer.appendChild(spinner);
-
-    insertAfter(div, lastContainer);
-
-    showSpinnerInsteadOf("next-page-link", "next-spinner", false);
-
+    const newButton = createNewNextButtonAndReplaceOld();
     window.onscroll = async function () {
-        if (elementInViewPort(div) && !scrapeStarted) {
+        if (elementInViewPort(newButton) && !scrapeStarted) {
             scrapeStarted = true;
             showSpinnerInsteadOf("next-page-link", "next-spinner", true);
 
-            await getNextPage(div);
-            const href = div.querySelector("a").getAttribute("href");
+            await getNextPage(newButton);
+            const href = newButton.querySelector("a").getAttribute("href");
             const increasedValue = Number(href.replace("?p=", "")) + 1;
             const newHref = "?p=" + increasedValue;
-            div.querySelector("a").setAttribute("href", newHref);
+            newButton.querySelector("a").setAttribute("href", newHref);
 
             await sortThumbnails(SortingOrder.Standard);
             selectCorrectButton(SortingOrder.Standard);
@@ -229,6 +202,8 @@ async function addEventListenersForButtons() {
         }
     };
 }
+
+
 
 function addButtonsToWebpage() {
     const bar = document.querySelector("f-bar-options");
