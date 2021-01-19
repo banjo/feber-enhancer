@@ -1,7 +1,14 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import { filterBy } from "./filter-service";
-import { deselectButton, getSpinnerElement, insertAfter, selectButton, shouldHideElement, showSpinnerInsteadOf } from "./helpers";
+import {
+    deselectButton,
+    getSpinnerElement,
+    insertAfter,
+    selectButton,
+    shouldHideElement,
+    showSpinnerInsteadOf,
+} from "./helpers";
 import {
     createElementFromString,
     getArticleId,
@@ -239,4 +246,18 @@ export function createNewNextButtonAndReplaceOld() {
 
     showSpinnerInsteadOf("next-page-link", "next-spinner", false);
     return div;
+}
+
+export async function handleScrollButtonChange(scrollButton: Element) {
+    const isSelected = scrollButton.classList.contains("button-selected");
+
+    if (isSelected) {
+        scrollButton.classList.remove("button-selected");
+    } else {
+        scrollButton.classList.add("button-selected");
+    }
+
+    const settings = await getThumbnailSettingsStateFromStorage();
+    settings.infiniteScroll = !isSelected;
+    setThumbnailSettingsStateToStorage(settings);
 }

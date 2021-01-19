@@ -29,6 +29,7 @@ export interface Attribute {
 export interface ThumbnailSettingsState {
     sorting: SortingOrder;
     showVotes: boolean;
+    infiniteScroll: boolean;
 }
 
 export interface FilterOptions {

@@ -25,6 +25,7 @@ import {
     createNewNextButtonAndReplaceOld,
     getAllAuthors,
     getContainerizedArticles,
+    handleScrollButtonChange,
     selectCorrectButton,
     shouldShowVoting,
 } from "./services/thumbnails-service";
@@ -68,6 +69,7 @@ async function finishLoad() {
 }
 
 async function initFields() {
+    // author input
     const selectAuthor = document.querySelector("#select-author");
     const allAuthors = await getAllAuthors();
     const all = new Option("Författare", "all");
@@ -87,6 +89,7 @@ async function initSettings() {
     const initialSettings: ThumbnailSettingsState = {
         showVotes: false,
         sorting: SortingOrder.Standard,
+        infiniteScroll: false,
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
@@ -125,6 +128,7 @@ async function addEventListenersForButtons() {
     const searchInput = document.querySelector("#search-input");
     const commentsButton = document.querySelector("#sort-comments-button");
     const selectAuthor = document.querySelector("#select-author");
+    const scrollButton = document.querySelector("#infinite-scroll-button");
 
     hotButton.addEventListener("click", async () => {
         await sortThumbnails(SortingOrder.Descending);
@@ -144,6 +148,10 @@ async function addEventListenersForButtons() {
     showVoteButton.addEventListener("click", async (e) => {
         const target = e.target as Element;
         await shouldShowVoting(!isButtonSelected(target));
+    });
+
+    scrollButton.addEventListener("click", async () => {
+        await handleScrollButtonChange(scrollButton);
     });
 
     searchInput.addEventListener("keyup", async (event) => {
@@ -184,6 +192,12 @@ async function addEventListenersForButtons() {
     const newButton = createNewNextButtonAndReplaceOld();
     window.onscroll = async function () {
         if (elementInViewPort(newButton) && !scrapeStarted) {
+            const settings = await getThumbnailSettingsStateFromStorage();
+
+            if (!settings.infiniteScroll) {
+                return;
+            }
+
             scrapeStarted = true;
             showSpinnerInsteadOf("next-page-link", "next-spinner", true);
 
@@ -202,8 +216,6 @@ async function addEventListenersForButtons() {
         }
     };
 }
-
-
 
 function addButtonsToWebpage() {
     const bar = document.querySelector("f-bar-options");
@@ -250,6 +262,13 @@ function addButtonsToWebpage() {
         "menu-item",
     ]);
 
+    // infinite scroll button
+    const scrollButton = createButton(
+        "infinite-scroll-button",
+        "Oändlig skroll",
+        ["menu-item"]
+    );
+
     // separator
     const separator = document.createElement("div");
     separator.classList.add("separator");
@@ -282,6 +301,8 @@ function addButtonsToWebpage() {
     pluginSettingsBarContainer.appendChild(searchFilter);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
     pluginSettingsBarContainer.appendChild(selectAuthor);
+    pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
+    pluginSettingsBarContainer.appendChild(scrollButton);
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", true);
 }
