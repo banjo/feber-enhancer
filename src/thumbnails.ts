@@ -15,6 +15,7 @@ import {
     getThumbnailSettingsStateFromStorage,
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
+    setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
 import { ArticleState, FilterOptions } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
@@ -30,10 +31,24 @@ import { filterBy } from "./services/filter-service";
 import { getNextPage } from "./services/scrape-service";
 
 (async () => {
+    await initializeThumbnailsPage();
+})();
+
+// when button is clicked in plugin menu
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    sortThumbnails(msg.sortDescending);
+});
+
+async function initializeThumbnailsPage() {
     try {
+        const extensionEnabled = await initSettings();
+
+        if (!extensionEnabled) {
+            return;
+        }
+
         addButtonsToWebpage();
         hideOriginalSettingsBar();
-        await initSettings();
         await manageArticleState();
         await initFields();
         await addEventListenersForButtons();
@@ -41,12 +56,35 @@ import { getNextPage } from "./services/scrape-service";
     } catch (e) {
         console.error(e);
     }
-})();
+}
 
-// when button is clicked in plugin menu
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    sortThumbnails(msg.sortDescending);
-});
+async function shouldActivateExtension(shouldBeActive: boolean) {
+    const oldBar = document.querySelector("f-bar-options");
+    const extensionBar = document.querySelector("#settings-bar");
+    const settings = await getThumbnailSettingsStateFromStorage();
+
+    if (shouldBeActive) {
+        oldBar.classList.add("hide-element");
+        extensionBar.classList.remove("hide-element");
+
+        await sortThumbnails(settings.sorting);
+        selectCorrectButton(settings.sorting);
+        await shouldShowVoting(settings.showVotes);
+    } else {
+        oldBar.classList.remove("hide-element");
+        extensionBar.classList.add("hide-element");
+
+        // reset all settings
+        await sortThumbnails(SortingOrder.Standard);
+        selectCorrectButton(SortingOrder.Standard);
+        await shouldShowVoting(false);
+        const scrollButton = document.querySelector("#infinite-scroll-button");
+        scrollButton.classList.remove("button-selected");
+        settings.infiniteScroll = false;
+    }
+
+    setThumbnailSettingsStateToStorage(settings);
+}
 
 function hideOriginalSettingsBar() {
     const bar = document.querySelector("f-bar-options");
@@ -90,7 +128,15 @@ async function initFields() {
 async function initSettings() {
     await loadStorageSettings();
 
+    const settings = await getThumbnailSettingsStateFromStorage();
+
+    if (!settings.isExtensionActive) {
+        shouldActivateExtension(false);
+        return false;
+    }
+
     setExtraArticleStateToStorage([]);
+    return true;
 }
 
 async function manageArticleState() {
