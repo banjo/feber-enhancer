@@ -5,10 +5,10 @@
     "description": "Enkla tillägg och funktioner till Feber.se",
     "version": "1.0",
 
-    "options_ui": {
-        "page": "options.html",
-        "chrome_style": true
-    },
+    // "options_ui": {
+    //     "page": "options.html",
+    //     "chrome_style": true
+    // },
 
     "browser_action": {
         "default_icon": "icon-hot.png",
