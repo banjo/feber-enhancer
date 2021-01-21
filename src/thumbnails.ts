@@ -1,5 +1,6 @@
 import { sortThumbnails } from "./services/sorting-service";
 import {
+    createBarContainer,
     createButton,
     createSelect,
     elementInViewPort,
@@ -296,18 +297,23 @@ function addButtonsToWebpage() {
         "feber-input",
     ]);
 
-    pluginSettingsBarContainer.appendChild(sortHot);
-    pluginSettingsBarContainer.appendChild(sortStandard);
-    pluginSettingsBarContainer.appendChild(sortComments);
-    pluginSettingsBarContainer.appendChild(sortCold);
+    // sort button container
+    const sortContainer = createBarContainer("sort-container", [
+        sortHot,
+        sortCold,
+        sortStandard,
+        sortComments,
+    ]);
+
+    pluginSettingsBarContainer.appendChild(sortContainer);
     pluginSettingsBarContainer.appendChild(separator);
     pluginSettingsBarContainer.appendChild(showVoteButton);
+    pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
+    pluginSettingsBarContainer.appendChild(scrollButton);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
     pluginSettingsBarContainer.appendChild(searchFilter);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
     pluginSettingsBarContainer.appendChild(selectAuthor);
-    pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
-    pluginSettingsBarContainer.appendChild(scrollButton);
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", true);
 }

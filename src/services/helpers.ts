@@ -28,6 +28,18 @@ export function createSelect(id: string, classes: string[]): HTMLSelectElement {
     return selectInput;
 }
 
+export function createBarContainer(id: string, elements: Element[]): Element {
+    const container = document.createElement("div");
+    container.classList.add("category-container");
+    container.id = id;
+
+    for (let element of elements) {
+        container.appendChild(element);
+    }
+
+    return container;
+}
+
 export function insertAfter(newNode: Element, referenceNode: Element) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
