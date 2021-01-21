@@ -65,6 +65,11 @@ async function finishLoad() {
 
     await shouldShowVoting(settings.showVotes);
 
+    if (settings.infiniteScroll) {
+        const scrollButton = document.querySelector("#infinite-scroll-button");
+        scrollButton.classList.add("button-selected");
+    }
+
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
 }
 

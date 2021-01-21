@@ -249,7 +249,6 @@ export function createNewNextButtonAndReplaceOld() {
 }
 
 export async function handleScrollButtonChange(scrollButton: Element) {
-    // TODO: add load on init to show button selected
     const isSelected = scrollButton.classList.contains("button-selected");
 
     if (isSelected) {
