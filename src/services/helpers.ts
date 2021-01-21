@@ -1,6 +1,9 @@
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, ThumbnailSettingsState } from "../models/interfaces";
-import { getThumbnailSettingsStateFromStorage, setThumbnailSettingsStateToStorage } from "./storage-service";
+import {
+    getThumbnailSettingsStateFromStorage,
+    setThumbnailSettingsStateToStorage,
+} from "./storage-service";
 
 export async function loadStorageSettings() {
     const initialSettings: ThumbnailSettingsState = {
@@ -8,6 +11,7 @@ export async function loadStorageSettings() {
         sorting: SortingOrder.Standard,
         infiniteScroll: false,
         isExtensionActive: false,
+        settingsInitiatedFromPopup: false,
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();

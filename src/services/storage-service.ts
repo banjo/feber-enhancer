@@ -7,13 +7,13 @@ import {
 export function setThumbnailSettingsStateToStorage(
     settings: ThumbnailSettingsState
 ) {
-    chrome.storage.local.set({ thumbnailSettings: settings });
+    chrome.storage.sync.set({ thumbnailSettings: settings });
 }
 
 export async function getThumbnailSettingsStateFromStorage(): Promise<ThumbnailSettingsState> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.local.get("thumbnailSettings", function (value) {
+            chrome.storage.sync.get(null, function (value) {
                 resolve(value.thumbnailSettings);
             });
         } catch (ex) {
@@ -29,7 +29,7 @@ export function setExtraArticleStateToStorage(thumbnails: ArticleSummary[][]) {
 export function getExtraArticleStateFromStorage(): Promise<ArticleSummary[][]> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.local.get(null, function (value) {
+            chrome.storage.sync.get(null, function (value) {
                 resolve(value.thumbnailsExtra);
             });
         } catch (ex) {
@@ -47,6 +47,22 @@ export function getArticleStateFromStorage(): Promise<ArticleState> {
         try {
             chrome.storage.local.get(null, function (value) {
                 resolve(value.thumbnails);
+            });
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
+
+export function setInitialHtmlState(html: string) {
+    chrome.storage.local.set({ initialState: html });
+}
+
+export function getInitialHtmlState(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.storage.local.get(null, function (value) {
+                resolve(value.initialState);
             });
         } catch (ex) {
             reject(ex);

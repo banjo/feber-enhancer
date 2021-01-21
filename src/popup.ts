@@ -7,7 +7,6 @@ import {
 (async () => {
     try {
         const checkbox = document.querySelector("input");
-        await initExtension();
 
         checkbox.addEventListener("change", () => {
             handleCheckboxValue();
@@ -16,6 +15,10 @@ import {
         console.error(e);
     }
 })();
+
+window.onload = async function () {
+    await initExtension();
+};
 
 async function handleCheckboxValue() {
     const checkbox = document.querySelector("input");
@@ -31,6 +34,8 @@ async function handleCheckboxValue() {
 
     const settings = await getThumbnailSettingsStateFromStorage();
     settings.isExtensionActive = checkbox.checked;
+    console.log(settings);
+
     setThumbnailSettingsStateToStorage(settings);
 }
 
@@ -39,6 +44,7 @@ async function initExtension() {
 
     await loadStorageSettings();
     const settings = await getThumbnailSettingsStateFromStorage();
+
     const checkbox = document.querySelector("input");
 
     if (settings.isExtensionActive) {
