@@ -30,6 +30,7 @@ export interface ThumbnailSettingsState {
     sorting: SortingOrder;
     showVotes: boolean;
     infiniteScroll: boolean;
+    isExtensionActive: boolean;
 }
 
 export interface FilterOptions {

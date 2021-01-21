@@ -7,6 +7,7 @@ import {
     getSpinnerElement,
     insertAfter,
     isButtonSelected,
+    loadStorageSettings,
     shouldHideElement,
     showSpinnerInsteadOf,
 } from "./services/helpers";
@@ -14,13 +15,8 @@ import {
     getThumbnailSettingsStateFromStorage,
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
-    setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
-import {
-    ArticleState,
-    FilterOptions,
-    ThumbnailSettingsState,
-} from "./models/interfaces";
+import { ArticleState, FilterOptions } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
 import {
     createNewNextButtonAndReplaceOld,
@@ -92,25 +88,7 @@ async function initFields() {
 }
 
 async function initSettings() {
-    const initialSettings: ThumbnailSettingsState = {
-        showVotes: false,
-        sorting: SortingOrder.Standard,
-        infiniteScroll: false,
-    };
-
-    const settings = await getThumbnailSettingsStateFromStorage();
-
-    let updated = false;
-    Object.keys(initialSettings).forEach((key) => {
-        if (settings[key] == null) {
-            settings[key] = initialSettings[key];
-            updated = true;
-        }
-    });
-
-    if (!settings || updated) {
-        setThumbnailSettingsStateToStorage(initialSettings);
-    }
+    await loadStorageSettings();
 
     setExtraArticleStateToStorage([]);
 }

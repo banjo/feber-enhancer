@@ -1,4 +1,29 @@
-import { ArticleSummary } from "../models/interfaces";
+import { SortingOrder } from "../models/enums";
+import { ArticleSummary, ThumbnailSettingsState } from "../models/interfaces";
+import { getThumbnailSettingsStateFromStorage, setThumbnailSettingsStateToStorage } from "./storage-service";
+
+export async function loadStorageSettings() {
+    const initialSettings: ThumbnailSettingsState = {
+        showVotes: false,
+        sorting: SortingOrder.Standard,
+        infiniteScroll: false,
+        isExtensionActive: false,
+    };
+
+    const settings = await getThumbnailSettingsStateFromStorage();
+
+    let updated = false;
+    Object.keys(initialSettings).forEach((key) => {
+        if (settings[key] == null) {
+            settings[key] = initialSettings[key];
+            updated = true;
+        }
+    });
+
+    if (!settings || updated) {
+        setThumbnailSettingsStateToStorage(initialSettings);
+    }
+}
 
 export function createButton(
     id: string,

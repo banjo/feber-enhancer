@@ -3,24 +3,23 @@
     <head>
         <meta charset="UTF-8" />
         <title>Feber Enhancer</title>
-        <style>
-            body {
-                font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-                font-size: 100%;
-            }
-        </style>
+        <link rel="stylesheet" href="popup.css" />
         <script src="js/vendor.js"></script>
     </head>
     <body>
-        <ul style="min-width: 700px">
-            <li>Current URL: <span id="url"></span></li>
-            <li>Current Time: <span id="time"></span></li>
-        </ul>
-        <button id="countUp">count up</button>
-        <button id="sort">Sortera Feber</button>
-        <input type="checkbox" id="sortDescending" name="sortDescending" checked />
-        <label for="sortDescending">Sortera fallande</label><br />
+        <div class="container">
+            <img
+                src="white-logo-hot.svg"
+                alt="Ferber Enhancer logo"
+                id="feber-logo"
+                width="150px"
+            />
 
+            <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+            </label>
+        </div>
         <script src="js/popup.js"></script>
     </body>
 </html>

@@ -1,42 +1,53 @@
-import * as moment from "moment";
+import { loadStorageSettings } from "./services/helpers";
+import {
+    getThumbnailSettingsStateFromStorage,
+    setThumbnailSettingsStateToStorage,
+} from "./services/storage-service";
 
-let count = 0;
+(async () => {
+    try {
+        const checkbox = document.querySelector("input");
+        await initExtension();
 
-$(function () {
-    const queryInfo = {
-        active: true,
-        currentWindow: true,
-    };
-
-    chrome.tabs.query(queryInfo, function (tabs) {
-        document.querySelector("#url").innerHTML = tabs[0].url;
-        document.querySelector("#time").innerHTML = moment().format(
-            "YYYY-MM-DD HH:mm:ss"
-        );
-    });
-
-    chrome.browserAction.setBadgeText({ text: count.toString() });
-
-    document.querySelector("#countUp").addEventListener("click", () => {
-        chrome.browserAction.setBadgeText({
-            text: (++count).toString(),
+        checkbox.addEventListener("change", () => {
+            handleCheckboxValue();
         });
-    });
+    } catch (e) {
+        console.error(e);
+    }
+})();
 
-    document.querySelector("#sort").addEventListener("click", () => {
-        chrome.tabs.query(
-            { active: true, currentWindow: true },
-            function (tabs) {
-                chrome.tabs.sendMessage(
-                    tabs[0].id,
-                    {
-                        sortDescending: $("#sortDescending").is(":checked"),
-                    },
-                    function (msg) {
-                        console.log("result message:", msg);
-                    }
-                );
-            }
-        );
-    });
-});
+async function handleCheckboxValue() {
+    const checkbox = document.querySelector("input");
+    const image = document.querySelector("img");
+
+    if (checkbox.checked) {
+        image.src = "white-logo-hot.svg";
+        chrome.browserAction.setIcon({ path: "icon-hot.png" });
+    } else {
+        image.src = "white-logo-cold.svg";
+        chrome.browserAction.setIcon({ path: "icon-cold.png" });
+    }
+
+    const settings = await getThumbnailSettingsStateFromStorage();
+    settings.isExtensionActive = checkbox.checked;
+    setThumbnailSettingsStateToStorage(settings);
+}
+
+async function initExtension() {
+    const image = document.querySelector("img");
+
+    await loadStorageSettings();
+    const settings = await getThumbnailSettingsStateFromStorage();
+    const checkbox = document.querySelector("input");
+
+    if (settings.isExtensionActive) {
+        image.src = "white-logo-hot.svg";
+        chrome.browserAction.setIcon({ path: "icon-hot.png" });
+        checkbox.checked = true;
+    } else {
+        image.src = "white-logo-cold.svg";
+        chrome.browserAction.setIcon({ path: "icon-cold.png" });
+        checkbox.checked = false;
+    }
+}
