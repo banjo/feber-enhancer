@@ -29,7 +29,7 @@ export function setExtraArticleStateToStorage(thumbnails: ArticleSummary[][]) {
 export function getExtraArticleStateFromStorage(): Promise<ArticleSummary[][]> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.sync.get(null, function (value) {
+            chrome.storage.local.get(null, function (value) {
                 resolve(value.thumbnailsExtra);
             });
         } catch (ex) {

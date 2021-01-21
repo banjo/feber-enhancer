@@ -1,4 +1,3 @@
-import { merge } from "jquery";
 import { SortingOrder } from "../models/enums";
 import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import { filterBy } from "./filter-service";
