@@ -31,7 +31,6 @@ export interface ThumbnailSettingsState {
     showVotes: boolean;
     infiniteScroll: boolean;
     isExtensionActive: boolean;
-    settingsInitiatedFromPopup: boolean;
 }
 
 export interface FilterOptions {

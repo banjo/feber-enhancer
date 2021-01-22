@@ -10,11 +10,14 @@ export async function loadStorageSettings() {
         showVotes: false,
         sorting: SortingOrder.Standard,
         infiniteScroll: false,
-        isExtensionActive: false,
-        settingsInitiatedFromPopup: false,
+        isExtensionActive: true,
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
+
+    if (!settings) {
+        setThumbnailSettingsStateToStorage(initialSettings);
+    }
 
     let updated = false;
     Object.keys(initialSettings).forEach((key) => {
@@ -24,8 +27,8 @@ export async function loadStorageSettings() {
         }
     });
 
-    if (!settings || updated) {
-        setThumbnailSettingsStateToStorage(initialSettings);
+    if (updated) {
+        setThumbnailSettingsStateToStorage(settings);
     }
 }
 

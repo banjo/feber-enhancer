@@ -3,7 +3,6 @@ import { getDayAfter, getDayBefore, insertAfter } from "./helpers";
 import {
     getArticleStateFromStorage,
     getExtraArticleStateFromStorage,
-    getThumbnailSettingsStateFromStorage,
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
 } from "./storage-service";

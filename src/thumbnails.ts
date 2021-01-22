@@ -17,7 +17,6 @@ import {
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
     setInitialHtmlState,
-    setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
 import { ArticleState, FilterOptions } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
@@ -35,9 +34,6 @@ import { getNextPage } from "./services/scrape-service";
 (async () => {
     await initializeThumbnailsPage();
 })();
-
-// when button is clicked in plugin menu
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {});
 
 async function changeBackToDisabledExtension() {
     const html = await getInitialHtmlState();
