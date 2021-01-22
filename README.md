@@ -5,7 +5,7 @@
   </a>
 
   <p align="center">
-    Chrome tillägg med enkla tillägg och funktioner till Feber.
+    Chrome-tillägg med enkla tillägg och funktioner till Feber.
     <br />
   </p>
 </p>
@@ -14,7 +14,7 @@
 
 ![Feber Enhancer Demo](./assets/feber-enhancer-demo.png)
 
-Feber Enhancer är ett Chrome extension för att underlätta surfandet på [Feber](https://www.feber.se). Små men enkla funkioner har lagts till, såsom sortering, filtrering, röstning och oändlig skroll. Samtliga i thumbnails-vyn. 
+Feber Enhancer är ett Chrome-tillägg för att underlätta surfandet på [Feber](https://www.feber.se). Små och enkla funkioner har lagts till, såsom sortering, filtrering, röstning och oändlig skroll. Samtliga i thumbnails-vyn. 
 
 # Innehållsförteckning
 - [Installera](#dart-installera)
