@@ -3,7 +3,10 @@ import { ArticleSummary, FilterOptions } from "../models/interfaces";
 import { filterBy } from "./filter-service";
 import {
     deselectButton,
+    getModernArticleHtml,
+    getOnClickForUrl,
     getSpinnerElement,
+    getTemperatureStyling,
     insertAfter,
     selectButton,
     shouldHideElement,
@@ -15,11 +18,14 @@ import {
     getAttributes,
     getAuthor,
     getBodyText,
+    getCategory,
     getComments,
+    getImage,
     getMainTitle,
     getScrapedHtml,
     getSubTitle,
     getTemp,
+    getTemperatureStatus,
     getTime,
     getUrl,
     scrapeArticlesFromThumbnails,
@@ -119,6 +125,8 @@ export async function getArticleSummaries(
                 const scrapedHtml = await getScrapedHtml(scraped[scrapeNumber]);
                 const fullArticle = createElementFromString(scrapedHtml);
 
+                const { isHot, isCold } = getTemperatureStatus(article);
+
                 let articleSummary: ArticleSummary = {
                     html: article.innerHTML,
                     index: indexOfArticle,
@@ -133,6 +141,10 @@ export async function getArticleSummaries(
                     subTitle: getSubTitle(article),
                     comments: getComments(article),
                     bodyText: getBodyText(fullArticle),
+                    imageSrc: getImage(article),
+                    isHot,
+                    isCold,
+                    category: getCategory(article),
                 };
 
                 articlesSummaries.push(articleSummary);
@@ -160,6 +172,39 @@ export function createArticleElement(article: ArticleSummary) {
         articleElement.setAttribute(attribute.name, attribute.value);
     }
     return articleElement;
+}
+
+export function createModernArticleElement(article: ArticleSummary) {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = getModernArticleHtml();
+
+    // TODO fix: temperature styling, animations, button links, voting
+    card.querySelector(".temperature").textContent = getTemperatureStyling(
+        article.temperature.toString()
+    );
+
+    const title = card.querySelector(".title");
+    title.textContent = article.mainTitle;
+    title.parentElement.setAttribute("href", article.url);
+    title.parentElement.setAttribute("onclick", getOnClickForUrl(article.url));
+
+    card.querySelector(".sub-title").textContent = article.subTitle;
+    card.querySelector(".author").textContent = article.author;
+    card.querySelector(".comments").textContent = article.comments.toString();
+    card.querySelector("img").src = article.imageSrc;
+
+    if (article.isCold) {
+        card.querySelector(".temp-box").classList.add("cold-box");
+        card.querySelector(".sub-title").classList.add("febercold");
+    }
+
+    if (article.isHot) {
+        card.querySelector(".temp-box").classList.add("hot-box");
+        card.querySelector(".sub-title").classList.add("feberhot");
+    }
+
+    return card;
 }
 
 export async function shouldShowVoting(showVoting: boolean) {

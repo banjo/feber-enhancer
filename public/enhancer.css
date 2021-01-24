@@ -76,3 +76,121 @@
 .hide-element {
     display: none;
 }
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+/* Modern Feber Card  */
+.card {
+    width: 250px;
+    height: 280px;
+    background: white;
+    margin: 1rem;
+    position: relative;
+    overflow: hidden;
+    /* border-radius: 0.5rem; */
+}
+
+.article-image {
+    position: absolute;
+    object-fit: cover;
+    height: 8rem;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.temp-box {
+    background-color: #222222;
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    left: 0;
+    top: 1rem;
+    /* border-radius: 0 20px 20px 0; */
+    text-align: center;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 200;
+    box-shadow: 0 0 5px #222;
+}
+
+.temperature {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.bottom-card {
+    margin: 8.8rem 0.8rem 0.8rem 0.8rem;
+}
+
+.category {
+    font-size: 0.8rem;
+    color: #7d7d7d;
+    font-weight: 700;
+}
+
+.title {
+    margin-top: 0.2rem;
+    color: #0e0e0e;
+    font-weight: 800;
+}
+
+.sub-title {
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.card-footer {
+    display: flex;
+    position: absolute;
+    bottom: 0.8rem;
+    justify-content: flex-end;
+    align-items: center;
+    left: 0.8rem;
+    right: 0.8rem;
+}
+
+.author {
+    margin-right: auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.box {
+    width: 2rem;
+    height: 2rem;
+    background-color: #222222;
+    margin-right: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border-radius: 0.5rem; */
+    text-align: center;
+    vertical-align: middle;
+    line-height: 2rem;
+}
+
+.hot-box {
+    background-color: #f7520c;
+    color: white;
+}
+
+.cold-box {
+    background-color: #00bfff;
+    color: white;
+}

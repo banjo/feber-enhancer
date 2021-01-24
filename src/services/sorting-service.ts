@@ -7,7 +7,11 @@ import {
     getThumbnailSettingsStateFromStorage,
     setThumbnailSettingsStateToStorage,
 } from "./storage-service";
-import { createArticleElement, shouldShowVoting } from "./thumbnails-service";
+import {
+    createArticleElement,
+    createModernArticleElement,
+    shouldShowVoting,
+} from "./thumbnails-service";
 
 export async function sortThumbnails(sortingOrder: SortingOrder) {
     const currentSettings = await getThumbnailSettingsStateFromStorage();
@@ -36,6 +40,7 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
 
         for (let article of sortedArticles) {
             let articleElement = createArticleElement(article);
+            // articleElement = createModernArticleElement(article);
 
             collection.appendChild(articleElement);
         }

@@ -94,6 +94,28 @@ export function getComments(article: Element) {
     return Number(commentCount);
 }
 
+export function getImage(article: Element) {
+    const src = article.querySelector("img").getAttribute("data-src");
+    return src;
+}
+
+export function getCategory(article: Element) {
+    // Todo: get category from URL
+
+    return "Tjena";
+}
+
+export function getTemperatureStatus(article: Element) {
+    const h1 = article.querySelector("h1");
+
+    const subTitle = h1.querySelectorAll(".feber, .febercold, .feberhot")[0];
+
+    const isHot = subTitle.classList.contains("feberhot");
+    const isCold = subTitle.classList.contains("febercold");
+
+    return { isHot, isCold };
+}
+
 // export async function getCommentsContent(fullArticle: Document) {
 //     const disqus = fullArticle.querySelector(".showDisqus");
 

@@ -205,3 +205,66 @@ export function getDayAfter(day: string) {
 
     return days[index + 1];
 }
+
+export function getModernArticleHtml() {
+    return `
+<div class="top-card">
+    <img src="https://static.feber.se/article_images/50/75/10/507510_1280.jpg" alt="" class="article-image" />
+    <div class="temp-box">
+        <p class="temperature noselect">45.2</p>
+    </div>
+</div>
+
+<div class="bottom-card">
+    <p class="category">Spel</p>
+
+    <a>
+        <h2 class="title">Microsoft ångrar sig kring Xbox Live-prissättningen</h2>
+        <p class="sub-title">Gör en pudel</p>
+    </a>
+
+    <div class="card-footer">
+        <p class="author">Frode Wikesjö</p>
+        <div class="box comments">15</div>
+        <div class="box cold-box"> - </div>
+        <div class="box hot-box">
+            <span>+</span>
+        </div>
+    </div>
+</div>
+`;
+}
+
+export function getTemperatureStyling(temp: string) {
+    if (temp.startsWith("-") && temp.length === 4) {
+        const beforeDot = temp.slice(0, 3);
+        const afterDot = temp.slice(3);
+
+        return beforeDot + "." + afterDot + "°";
+    }
+
+    if (temp.startsWith("-") && temp.length === 5) {
+        const beforeDot = temp.slice(0, 4);
+        const afterDot = temp.slice(4);
+
+        return beforeDot + "." + afterDot + "°";
+    }
+
+    if (temp.length === 3) {
+        const beforeDot = temp.slice(0, 2);
+        const afterDot = temp.slice(2);
+
+        return beforeDot + "." + afterDot + "°";
+    }
+
+    if (temp.length === 4) {
+        const beforeDot = temp.slice(0, 3);
+        const afterDot = temp.slice(3);
+
+        return beforeDot + "." + afterDot + "°";
+    }
+}
+
+export function getOnClickForUrl(url: string) {
+    return `gtag('event', 'fromBasic', { 'event_category' : 'Click', 'event_label' : '${url}' });`;
+}

@@ -19,6 +19,10 @@ export interface ArticleSummary {
     subTitle: string;
     comments: number;
     bodyText: string[];
+    imageSrc: string;
+    isHot: boolean;
+    isCold: boolean;
+    category: string;
 }
 
 export interface Attribute {
