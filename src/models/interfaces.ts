@@ -35,6 +35,7 @@ export interface ThumbnailSettingsState {
     showVotes: boolean;
     infiniteScroll: boolean;
     isExtensionActive: boolean;
+    flatCards: boolean;
 }
 
 export interface FilterOptions {

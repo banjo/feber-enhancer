@@ -41,8 +41,12 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
         const sortedArticles = sort(articleSummaries, sortingOrder);
 
         for (let article of sortedArticles) {
-            let articleElement = createArticleElement(article);
-            // articleElement = createModernArticleElement(article);
+            let articleElement;
+            if (currentSettings.flatCards) {
+                articleElement = createModernArticleElement(article);
+            } else {
+                articleElement = createArticleElement(article);
+            }
 
             collection.appendChild(articleElement);
         }

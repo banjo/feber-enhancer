@@ -11,6 +11,7 @@ export async function loadStorageSettings() {
         sorting: SortingOrder.Standard,
         infiniteScroll: false,
         isExtensionActive: true,
+        flatCards: false,
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
