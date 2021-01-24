@@ -289,7 +289,7 @@ function addButtonsToWebpage() {
     );
 
     // flat card button
-    const flatCardButton = createButton("flat-card-button", "Ny design", [
+    const flatCardButton = createButton("flat-card-button", "Ändra design", [
         "menu-item",
     ]);
 

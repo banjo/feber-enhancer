@@ -90,11 +90,15 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.flat-cards-container {
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)) !important;
+}
+
 /* Modern Feber Card  */
 .card {
-    width: 250px;
-    height: 280px;
-    background: rgb(245, 244, 244);
+    width: 220px;
+    height: 270px;
+    background: white;
     margin: 1rem;
     position: relative;
     overflow: hidden;
@@ -128,30 +132,30 @@
 }
 
 .temperature {
-    font-size: 0.85rem;
+    font-size: 12px;
     font-weight: 500;
 }
 
 .bottom-card {
-    margin: 8.8rem 0.8rem 0.8rem 0.8rem;
+    margin: 8.3rem 0.8rem 0.8rem 0.8rem;
 }
 
 .category {
-    font-size: 0.8rem;
+    font-size: 11px;
     color: #7d7d7d;
     font-weight: 700;
 }
 
 .title {
-    margin-top: 0.2rem;
+    margin-top: 0.1rem;
     color: #0e0e0e;
     font-weight: 800;
-    font-size: 0.9rem;
+    font-size: 13px;
 }
 
 .sub-title {
-    margin-top: 0.2rem;
-    font-size: 0.8rem;
+    margin-top: 0.1rem;
+    font-size: 12px;
     font-weight: 300;
     color: rgba(0, 0, 0, 0.5);
 }
@@ -168,16 +172,16 @@
 
 .author {
     margin-right: auto;
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .box {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     background-color: #222222;
     margin-right: 5px;
-    font-size: 1rem;
+    font-size: 12px;
     font-weight: 500;
     color: white;
     display: flex;

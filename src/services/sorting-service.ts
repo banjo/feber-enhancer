@@ -38,6 +38,12 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
 
         collection.innerHTML = "";
 
+        if (currentSettings.flatCards) {
+            collection.classList.add("flat-cards-container");
+        } else {
+            collection.classList.remove("flat-cards-container");
+        }
+
         const sortedArticles = sort(articleSummaries, sortingOrder);
 
         for (let article of sortedArticles) {

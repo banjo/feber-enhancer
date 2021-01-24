@@ -228,9 +228,7 @@ export function getModernArticleHtml() {
         <p class="author">Frode Wikesjö</p>
         <div class="box comments">15</div>
         <div class="box cold-box"> - </div>
-        <div class="box hot-box">
-            <span>+</span>
-        </div>
+        <div class="box hot-box"> + </div>
     </div>
 </div>
 `;
