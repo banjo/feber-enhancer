@@ -28,6 +28,8 @@ export async function sortThumbnails(sortingOrder: SortingOrder) {
     for (let collection of containers) {
         let articleSummaries = articleState.articles[i];
 
+        collection.setAttribute("style", "justify-items: center;");
+
         // articles from infinite scroll, with state from another storage
         if (articleSummaries == null) {
             articleSummaries = extraArticles[j];

@@ -11,7 +11,13 @@ import {
 } from "./storage-service";
 
 export async function filterBy(options: FilterOptions) {
-    const allArticles = document.getElementsByTagName("f-basic");
+    let allArticles = document.getElementsByTagName("f-basic");
+
+    // if flat cards, look for class instead
+    if (allArticles.length === 0) {
+        allArticles = document.getElementsByClassName("card");
+    }
+
     const standardArticleSummaries = await (await getArticleStateFromStorage())
         .articles;
     const temporaryArticleSummaries = await getExtraArticleStateFromStorage();

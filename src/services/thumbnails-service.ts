@@ -144,7 +144,7 @@ export async function getArticleSummaries(
                     imageSrc: getImage(article),
                     isHot,
                     isCold,
-                    category: getCategory(article),
+                    category: getCategory(fullArticle),
                 };
 
                 articlesSummaries.push(articleSummary);
@@ -179,7 +179,9 @@ export function createModernArticleElement(article: ArticleSummary) {
     card.classList.add("card");
     card.innerHTML = getModernArticleHtml();
 
-    // TODO fix: temperature styling, animations, button links, voting
+    // TODO fix: animations, button links
+    card.id = `ArticleBasic_${article.articleId}`;
+
     card.querySelector(".temperature").textContent = getTemperatureStyling(
         article.temperature.toString()
     );
@@ -193,6 +195,17 @@ export function createModernArticleElement(article: ArticleSummary) {
     card.querySelector(".author").textContent = article.author;
     card.querySelector(".comments").textContent = article.comments.toString();
     card.querySelector("img").src = article.imageSrc;
+    card.querySelector(".category").textContent = article.category;
+    card.querySelector(".temp-box").id = `ikon_thumbs_${article.articleId}`;
+
+    card.querySelector(".box.cold-box").setAttribute(
+        "onclick",
+        `submitDegreee('${article.articleId}','-1');`
+    );
+    card.querySelector(".box.hot-box").setAttribute(
+        "onclick",
+        `submitDegreee('${article.articleId}','1');`
+    );
 
     if (article.isCold) {
         card.querySelector(".temp-box").classList.add("cold-box");

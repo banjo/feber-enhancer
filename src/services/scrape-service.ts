@@ -99,10 +99,11 @@ export function getImage(article: Element) {
     return src;
 }
 
-export function getCategory(article: Element) {
-    // Todo: get category from URL
+export function getCategory(fullArticle: Document) {
+    const category = fullArticle.querySelector(".bodyCat").querySelector("a")
+        .textContent;
 
-    return "Tjena";
+    return category;
 }
 
 export function getTemperatureStatus(article: Element) {
