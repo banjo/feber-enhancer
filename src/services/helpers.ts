@@ -269,3 +269,15 @@ export function getTemperatureStyling(temp: string) {
 export function getOnClickForUrl(url: string) {
     return `gtag('event', 'fromBasic', { 'event_category' : 'Click', 'event_label' : '${url}' });`;
 }
+
+export function toggleButton(button: Element): boolean {
+    const isSelected = button.classList.contains("button-selected");
+
+    if (isSelected) {
+        button.classList.remove("button-selected");
+    } else {
+        button.classList.add("button-selected");
+    }
+
+    return !isSelected;
+}

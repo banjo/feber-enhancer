@@ -24,6 +24,7 @@ import {
     createNewNextButtonAndReplaceOld,
     getAllAuthors,
     getContainerizedArticles,
+    handleFlatCardButtonClick,
     handleScrollButtonChange,
     selectCorrectButton,
     shouldShowVoting,
@@ -79,6 +80,11 @@ async function finishLoad() {
     if (settings.infiniteScroll) {
         const scrollButton = document.querySelector("#infinite-scroll-button");
         scrollButton.classList.add("button-selected");
+    }
+
+    if (settings.flatCards) {
+        const flatCardButton = document.querySelector("#flat-card-button");
+        flatCardButton.classList.add("button-selected");
     }
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
@@ -137,6 +143,7 @@ async function addEventListenersForButtons() {
     const commentsButton = document.querySelector("#sort-comments-button");
     const selectAuthor = document.querySelector("#select-author");
     const scrollButton = document.querySelector("#infinite-scroll-button");
+    const flatCardButton = document.querySelector("#flat-card-button");
 
     hotButton.addEventListener("click", async () => {
         await sortThumbnails(SortingOrder.Descending);
@@ -160,6 +167,10 @@ async function addEventListenersForButtons() {
 
     scrollButton.addEventListener("click", async () => {
         await handleScrollButtonChange(scrollButton);
+    });
+
+    flatCardButton.addEventListener("click", async () => {
+        await handleFlatCardButtonClick(flatCardButton);
     });
 
     searchInput.addEventListener("keyup", async (event) => {
@@ -277,6 +288,11 @@ function addButtonsToWebpage() {
         ["menu-item"]
     );
 
+    // flat card button
+    const flatCardButton = createButton("flat-card-button", "Ny design", [
+        "menu-item",
+    ]);
+
     // separator
     const separator = document.createElement("div");
     separator.classList.add("separator");
@@ -307,11 +323,16 @@ function addButtonsToWebpage() {
         sortComments,
     ]);
 
+    const switchContainer = createBarContainer("switch-container", [
+        showVoteButton,
+        scrollButton,
+    ]);
+
     pluginSettingsBarContainer.appendChild(sortContainer);
     pluginSettingsBarContainer.appendChild(separator);
-    pluginSettingsBarContainer.appendChild(showVoteButton);
+    pluginSettingsBarContainer.appendChild(switchContainer);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
-    pluginSettingsBarContainer.appendChild(scrollButton);
+    pluginSettingsBarContainer.appendChild(flatCardButton);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));
     pluginSettingsBarContainer.appendChild(searchFilter);
     pluginSettingsBarContainer.appendChild(separator.cloneNode(true));

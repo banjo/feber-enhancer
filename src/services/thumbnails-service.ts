@@ -11,6 +11,7 @@ import {
     selectButton,
     shouldHideElement,
     showSpinnerInsteadOf,
+    toggleButton,
 } from "./helpers";
 import {
     createElementFromString,
@@ -30,6 +31,7 @@ import {
     getUrl,
     scrapeArticlesFromThumbnails,
 } from "./scrape-service";
+import { sortThumbnails } from "./sorting-service";
 import {
     getArticleStateFromStorage,
     getThumbnailSettingsStateFromStorage,
@@ -307,15 +309,18 @@ export function createNewNextButtonAndReplaceOld() {
 }
 
 export async function handleScrollButtonChange(scrollButton: Element) {
-    const isSelected = scrollButton.classList.contains("button-selected");
-
-    if (isSelected) {
-        scrollButton.classList.remove("button-selected");
-    } else {
-        scrollButton.classList.add("button-selected");
-    }
+    const isSelected = toggleButton(scrollButton);
 
     const settings = await getThumbnailSettingsStateFromStorage();
-    settings.infiniteScroll = !isSelected;
+    settings.infiniteScroll = isSelected;
     setThumbnailSettingsStateToStorage(settings);
+}
+
+export async function handleFlatCardButtonClick(button: Element) {
+    const isSelected = toggleButton(button);
+
+    const settings = await getThumbnailSettingsStateFromStorage();
+    settings.flatCards = isSelected;
+    setThumbnailSettingsStateToStorage(settings);
+    sortThumbnails(settings.sorting);
 }
