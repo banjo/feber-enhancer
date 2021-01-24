@@ -65,6 +65,10 @@ Sök och filtrera artiklarna som du har laddat för att enkelt hitta något du s
 
 Filtrera efter dina favoritförfattare.
 
+## Nya kort
+ ![New cards](/assets/new-cards.png)
+
+Välj om du vill använda andra nyhetskort än de vanliga.
 # :clipboard: Teknologier
 * **Typescript**
 * **jQuery**
