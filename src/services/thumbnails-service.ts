@@ -152,7 +152,6 @@ export async function getArticleSummaries(
                 articlesSummaries.push(articleSummary);
             } catch (error) {
                 console.error(error);
-                continue;
             }
 
             scrapeNumber++;
