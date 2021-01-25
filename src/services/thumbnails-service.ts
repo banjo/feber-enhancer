@@ -319,6 +319,10 @@ export async function handleScrollButtonChange(scrollButton: Element) {
 export async function handleFlatCardButtonClick(button: Element) {
     const isSelected = toggleButton(button);
 
+    const showVoteButton = document.querySelector("#show-vote-button");
+
+    shouldHideElement(showVoteButton, isSelected);
+
     const settings = await getThumbnailSettingsStateFromStorage();
     settings.flatCards = isSelected;
     setThumbnailSettingsStateToStorage(settings);

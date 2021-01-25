@@ -83,8 +83,10 @@ async function finishLoad() {
     }
 
     if (settings.flatCards) {
+        const showVoteButton = document.querySelector("#show-vote-button");
         const flatCardButton = document.querySelector("#flat-card-button");
         flatCardButton.classList.add("button-selected");
+        shouldHideElement(showVoteButton, true);
     }
 
     showSpinnerInsteadOf("settings-bar-container", "thumbnail-spinner", false);
