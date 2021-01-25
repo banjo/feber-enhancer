@@ -3,6 +3,7 @@ import { getDayAfter, getDayBefore, insertAfter } from "./helpers";
 import {
     getArticleStateFromStorage,
     getExtraArticleStateFromStorage,
+    getThumbnailSettingsStateFromStorage,
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
 } from "./storage-service";
@@ -14,10 +15,13 @@ import {
 export async function scrapeArticlesFromThumbnails(
     containers: HTMLCollectionOf<Element>
 ) {
+    const settings = await getThumbnailSettingsStateFromStorage();
     let allUrls: string[] = [];
 
+    const tagName = settings.isNewFeberDesign ? "f-square" : "f-basic";
+
     for (let collection of containers) {
-        const articles = collection.getElementsByTagName("f-basic");
+        const articles = collection.getElementsByTagName(tagName);
         for (let article of articles) {
             let url = getUrl(article);
 
@@ -37,7 +41,11 @@ export async function scrapeArticlesFromThumbnails(
 }
 
 export async function getScrapedHtml(response: Promise<Response>) {
+    console.log(response);
+
     const data = await response;
+    console.log(data);
+
     return await data.text();
 }
 

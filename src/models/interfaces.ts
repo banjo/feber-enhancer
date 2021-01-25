@@ -36,6 +36,7 @@ export interface ThumbnailSettingsState {
     infiniteScroll: boolean;
     isExtensionActive: boolean;
     flatCards: boolean;
+    isNewFeberDesign: boolean;
 }
 
 export interface FilterOptions {

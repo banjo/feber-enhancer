@@ -17,6 +17,7 @@ import {
     setArticleStateToStorage,
     setExtraArticleStateToStorage,
     setInitialHtmlState,
+    setThumbnailSettingsStateToStorage,
 } from "./services/storage-service";
 import { ArticleState, FilterOptions } from "./models/interfaces";
 import { SortingOrder } from "./models/enums";
@@ -49,7 +50,7 @@ async function initializeThumbnailsPage() {
             return;
         }
 
-        addButtonsToWebpage();
+        await addButtonsToWebpage();
         hideOriginalSettingsBar();
 
         await manageArticleState();
@@ -118,8 +119,13 @@ async function initSettings() {
         return false;
     }
 
+    if (document.querySelectorAll("f-square").length > 0) {
+        settings.isNewFeberDesign = true;
+    }
+
     const cloneHtml = document.querySelector("body").innerHTML;
 
+    setThumbnailSettingsStateToStorage(settings);
     setInitialHtmlState(cloneHtml);
     setExtraArticleStateToStorage([]);
     return true;
@@ -209,7 +215,13 @@ async function addEventListenersForButtons() {
         await filterBy(options);
     });
 
+    const settings = await getThumbnailSettingsStateFromStorage();
     let scrapeStarted = false;
+
+    if (settings.isNewFeberDesign) {
+        return;
+    }
+
     const newButton = createNewNextButtonAndReplaceOld();
     window.onscroll = async function () {
         if (elementInViewPort(newButton) && !scrapeStarted) {
@@ -238,13 +250,22 @@ async function addEventListenersForButtons() {
     };
 }
 
-function addButtonsToWebpage() {
-    const bar = document.querySelector("f-bar-options");
+async function addButtonsToWebpage() {
+    const settings = await getThumbnailSettingsStateFromStorage();
+    const barTag = settings.isNewFeberDesign
+        ? "f-bar-optionscontainer"
+        : "f-bar-options";
+
+    const bar = document.querySelector(barTag);
 
     // add settings bar
     const pluginSettingsBar = document.createElement("div");
     pluginSettingsBar.classList.add("settings-bar");
     pluginSettingsBar.id = "settings-bar";
+
+    if (settings.isNewFeberDesign) {
+        pluginSettingsBar.classList.add("new-feber-design-color");
+    }
 
     const settingsBarTitle = document.createElement("div");
     settingsBarTitle.classList.add("settings-bar-title");

@@ -12,6 +12,7 @@ export async function loadStorageSettings() {
         infiniteScroll: false,
         isExtensionActive: true,
         flatCards: false,
+        isNewFeberDesign: false,
     };
 
     const settings = await getThumbnailSettingsStateFromStorage();
@@ -20,17 +21,16 @@ export async function loadStorageSettings() {
         setThumbnailSettingsStateToStorage(initialSettings);
     }
 
-    let updated = false;
     Object.keys(initialSettings).forEach((key) => {
         if (settings[key] == null) {
             settings[key] = initialSettings[key];
-            updated = true;
         }
     });
 
-    if (updated) {
-        setThumbnailSettingsStateToStorage(settings);
-    }
+    // always reset on launch
+    settings.isNewFeberDesign = false;
+
+    setThumbnailSettingsStateToStorage(settings);
 }
 
 export function createButton(

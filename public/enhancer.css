@@ -12,6 +12,10 @@
     text-align: center;
 }
 
+.new-feber-design-color {
+    background-color: #3d3d3d;
+}
+
 .settings-bar-container {
     display: flex;
     align-items: center;

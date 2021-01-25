@@ -39,7 +39,15 @@ import {
 } from "./storage-service";
 
 export async function getContainerizedArticles() {
-    const containers = document.getElementsByClassName("basicContainer");
+    const settings = await getThumbnailSettingsStateFromStorage();
+
+    let containers;
+    if (settings.isNewFeberDesign) {
+        containers = document.getElementsByTagName("f-squares");
+    } else {
+        containers = document.getElementsByClassName("basicContainer");
+    }
+
     let scrapedArticles = await scrapeArticlesFromThumbnails(containers);
 
     const containerArticleSummaries = await getArticleSummaries(
@@ -112,10 +120,13 @@ export async function getArticleSummaries(
 ) {
     const containerArticleSummaries = [] as ArticleSummary[][];
 
+    const settings = await getThumbnailSettingsStateFromStorage();
+    const tagName = settings.isNewFeberDesign ? "f-square" : "f-basic";
+
     let collectionNumber = 0;
     let scrapeNumber = 0;
     for (let collection of containers) {
-        const articles = collection.getElementsByTagName("f-basic");
+        const articles = collection.getElementsByTagName(tagName);
 
         const articlesSummaries: ArticleSummary[] = [];
 
@@ -148,6 +159,8 @@ export async function getArticleSummaries(
                     isCold,
                     category: getCategory(fullArticle),
                 };
+
+                console.log(articleSummary);
 
                 articlesSummaries.push(articleSummary);
             } catch (error) {
