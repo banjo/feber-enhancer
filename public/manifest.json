@@ -1,6 +1,5 @@
 {
     "manifest_version": 2,
-
     "name": "Feber Enhancer",
     "description": "Enkla tillägg och funktioner till Feber.se",
     "version": "0.2.3",
@@ -8,9 +7,7 @@
         "default_icon": "icon-standard.png",
         "default_popup": "popup.html"
     },
-
     "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
-
     "content_scripts": [
         {
             "matches": ["https://feber.se/*"],
@@ -21,10 +18,8 @@
             "js": ["js/vendor.js", "js/thumbnails.js"]
         }
     ],
-
     "background": {
         "scripts": ["js/vendor.js", "js/background.js"]
     },
-
     "permissions": ["storage", "<all_urls>"]
 }
