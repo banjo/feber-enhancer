@@ -1,6 +1,6 @@
 {
     "name": "feber-enhancer",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Chrome-tillägg med funktioner till Feber",
     "main": "index.js",
     "scripts": {
