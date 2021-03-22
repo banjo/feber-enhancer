@@ -26,9 +26,10 @@ Feber Enhancer är ett Chrome-tillägg för att underlätta surfandet på [Feber
 ___
 
 # :dart: Installera
-Appen är för tillfället inte uppladdad till Chrome Web Store, den kan istället laddas hem från [releases](https://github.com/banjo/feber-enhancer/releases/latest).
+Tillägget finns tillgängligt på Chrome Web Store [här](https://chrome.google.com/webstore/detail/feber-enhancer/lalfpjhemhlifaceeccaamakenlapobm).
 
-Installation sker enligt instruktionerna på [utveckla](#cloud-utveckla)-fliken.
+Den kan även laddas hem från [releases](https://github.com/banjo/feber-enhancer/releases/latest).
+Installation sker då enligt instruktionerna på [utveckla](#cloud-utveckla)-fliken.
 
 
 # :heavy_check_mark: Funktioner
