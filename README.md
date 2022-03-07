@@ -14,6 +14,8 @@
 
 ![Feber Enhancer Demo](./assets/feber-enhancer-demo.png)
 
+## FEBER ENHANCER FUNGERAR INTE LÄNGRE PGA FEBERS NYA UPPDATERING
+
 Feber Enhancer är ett Chrome-tillägg för att underlätta surfandet på [Feber](https://www.feber.se). Små och enkla funkioner har lagts till, såsom sortering, filtrering, röstning och oändlig skroll. Samtliga i thumbnails-vyn. 
 
 # Innehållsförteckning
